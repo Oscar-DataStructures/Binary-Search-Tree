@@ -9,6 +9,21 @@ Project 5
 #include <string>
 
 
+struct Node
+{
+	public:
+
+			int key;	//value held in node
+
+			Node* parent; //parent node
+			Node* left;		//left child
+		  Node* right;	//right child
+
+			Node* newNode(int key); //have to add key type and key type
+			//add private root?
+};
+
+
 template <class KeyType>
 class bst
 {
@@ -34,6 +49,10 @@ class bst
     std::string inOrder() const; // return string of items from an inorder traversal
     std::string preOrder() const; // return string of items from a preorder traversal
     std::string postOrder() const; // return string of items from a postorder traversal
+
+	private:
+		Node* root;
+		Node* tmp;
 };
 
 #include "bst.cpp"

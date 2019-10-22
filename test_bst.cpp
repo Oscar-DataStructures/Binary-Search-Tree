@@ -14,7 +14,8 @@ Project 5
 // ======================= Test Default Constructor Method =====================
 void test_defaultConstructor()
 {
-
+	bst<int> a;
+	assert(a.empty() == 1);
 }
 
 
