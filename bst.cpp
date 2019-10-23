@@ -148,7 +148,6 @@ void bst<KeyType>::insert(KeyType k)
     y->right = z;
 		z->parent = y;
 	}
-  //recursiveInsert(this->root, k);
 }
 
 
@@ -158,13 +157,13 @@ void bst<KeyType>::remove(KeyType k) //added parameter to allow recursion, we co
 // PreConditions:
 // PostConditions:
 {
-  recursiveRemove(this->root, k);
+  // recursiveRemove(subtreeRoot, k);
 }
 
 
 // ============================= Remove Recursive Method =======================
 template <class KeyType>
-void bst<KeyType>::recursiveRemove(Node<KeyType*> root, KeyType* k) //added parameter to allow recursion, we could also make new
+Node<KeyType>* bst<KeyType>::recursiveRemove(Node<KeyType>* root, KeyType* k) //added parameter to allow recursion, we could also make new
 //private methods that do the recursion and just call them here
 // PreConditions:
 // PostConditions:  Delete first item that has key k
@@ -172,18 +171,39 @@ void bst<KeyType>::recursiveRemove(Node<KeyType*> root, KeyType* k) //added para
 
 {
 
-  // tmp = &root; //this way we dont change the root pointer
-  // if (tmp == NULL)
-  //   return; //ends the function since there is nothing to remove
+  // Node<KeyType>* tmp = root; //this way we dont change the root pointer
+  // if (root == NULL)
+  //   return root; //ends the function since there is nothing to remove
 	//
-  // if (k < tmp->key) //go down left side
-  //   tmp->left = recursiveRemove(tmp->left, k);
+  // if (k < root->key) //go down left side
+  //   root->left = recursiveRemove(root->left, k);
 	//
   // else if (k > root->key) //go down right side
-  //   tmp->right = recursiveRemove(tmp->right, k);
+  //   root->right = recursiveRemove(root->right, k);
 	//
-  // //last possibility is that the root itself is the one that needs to be removed
-
+	// 	else //this is if we delete the root and have to restructure the tree, 2 cases: root no child or root have child
+	// 	// for the else portion I looked at https://www.geeksforgeeks.org/binary-search-tree-set-2-delete/ for refrence
+	// 	{
+	// 		if(root->left == NULL) //if no left child
+	// 		{
+	// 			tmp = root->right; //make the right child root
+	// 			delete root;
+	// 			return tmp;
+	// 		}
+	//
+	// 		else if(root->right == NULL) //if no right child
+	// 		{
+	// 			tmp = root->left; //make the left child root
+	// 			delete root;
+	// 			return tmp;
+	// 		}
+	//
+	// 		tmp = successor(tmp->key); // get the successor whose value will become new root
+	// 		root->key = tmp->key;
+	// 		root->right = recursiveRemove(root->right, tmp->key);
+	// 	}
+	//
+	// 	return root;
 }
 
 
