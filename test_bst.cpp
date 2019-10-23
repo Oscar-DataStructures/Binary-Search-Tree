@@ -14,10 +14,10 @@ Project 5
 // ======================= Test Default Constructor Method =====================
 void test_defaultConstructor()
 {
-	bst<int> a;
-	assert(a.empty() == 1);
+	//bst<int> a;
+	//assert(a.empty() == 1);
 
-	cout << a.inOrder() << endl;
+	// cout << a.inOrder() << endl;
 
 }
 
@@ -73,15 +73,22 @@ void test_get()
 // =============================== Test Insert Method ==========================
 void test_insert()
 {
-	// bst<int> a;
-	// assert(a.empty() == 1);
-	//
-	// a.insert(1);
-	// a.insert(2);
-	// a.insert(3);
-	// a.insert(4);
-	//
-	// assert(a.inOrder() == "1, 2, 3, 4");
+	bst<int> a;
+	assert(a.empty() == 1);
+	
+	cout << "init" << endl;
+	a.insert(1);
+	a.insert(5);
+	a.insert(3);
+	a.insert(4);
+
+	cout << "inserts completed" << endl;
+	assert(*(a.get(1)) == 1);
+	assert(*(a.get(4)) == 4);
+	assert(*(a.get(5)) == 5);
+	assert(*(a.get(3)) == 3);
+	
+	// assert(a.inOrder() == "1, 3, 4, 5");
 	// assert(a.empty() == 0);
 
 }

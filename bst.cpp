@@ -15,17 +15,15 @@ using namespace std;
 
 //============================ New Node Function================================
 template <class KeyType>
-KeyType* newNode(KeyType* key)
+Node<KeyType>::Node(KeyType key)
 //Preconditions:
 //Postcondition:
 
 {
-	KeyType* node = new Node<KeyType*>();		//dynamically allocate Node
-	node->key = key;
-	node->left = NULL;
-	node->right = NULL;    //New Node with no pointers to any values
-
-	return node;
+	//KeyType* node = new Node<KeyType>();		//dynamically allocate Node
+	this->key = key;
+	this->left = NULL;
+	this->right = NULL;    //New Node with no pointers to any values
 }
 
 
@@ -77,11 +75,11 @@ bool bst<KeyType>::empty() const
 
 // ================================= Get Method ================================
 template <class KeyType>
-KeyType* bst<KeyType>::get(const KeyType& k) const
-// PreConditions: Tree must exist
+KeyType* bst<KeyType>::get(KeyType k) const
+// PreConditions: Root must exist
 // PostConditions:  Return first item that has key k
 {
-  Node<KeyType> *tmp = &root;
+  Node<KeyType> *tmp = root;
   while (tmp != NULL && tmp->key != k) {
     if (k < tmp->key) {
       tmp = tmp->left;
@@ -90,18 +88,23 @@ KeyType* bst<KeyType>::get(const KeyType& k) const
     }
   }
 
-  return tmp;
+  if (tmp == NULL) {
+    return NULL;
+  } else {
+    return &(tmp->key);
+  }
 }
 
 
 // ================================ Insert Method ==============================
 template <class KeyType>
-void bst<KeyType>::insert(KeyType* k)
+void bst<KeyType>::insert(KeyType k)
 // PreConditions:
 // PostConditions:
 {
-  Node<KeyType> *z = newNode(k);
-  Node<KeyType> *x = &root;
+  Node<KeyType> zInit(k);
+  Node<KeyType> *z = &zInit;
+  Node<KeyType> *x = root;
   Node<KeyType> *y = NULL;
   while (x != NULL) {
     y = x;
@@ -147,7 +150,7 @@ Node<KeyType*> bst<KeyType>::recursiveInsert(Node<KeyType*> root, KeyType* k) //
 
 // ================================ Remove Method ==============================
 template <class KeyType>
-void bst<KeyType>::remove(const KeyType& k) //added parameter to allow recursion, we could also make new
+void bst<KeyType>::remove(KeyType k) //added parameter to allow recursion, we could also make new
 // PreConditions:
 // PostConditions: 
 {

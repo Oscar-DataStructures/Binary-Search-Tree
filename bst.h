@@ -5,6 +5,8 @@ Dr. Lall
 Project 5
 */
 
+#ifndef _bst_h
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -12,7 +14,7 @@ Project 5
 using namespace std;
 
 template <class KeyType>
-struct Node
+class Node
 {
 	public:
 
@@ -22,7 +24,7 @@ struct Node
 		Node* left; //left child
 		Node* right; //right child
 
-		KeyType* newNode(KeyType* key); //have to add key type and key type
+		Node(KeyType key);
 		//add private root?
 };
 
@@ -36,10 +38,10 @@ class bst
 		bst(const bst<KeyType>& tree); //copy constructor
 		bool empty() const; // return true if empty; false o/w
 
-		KeyType* get(const KeyType& k) const; // return first item with key equal to k
+		KeyType* get(KeyType k) const; // return first item with key equal to k
 
-		void insert(KeyType* k); // insert k into the tree
-		void remove(const KeyType& k); // delete first item with key equal to k
+		void insert(KeyType k); // insert k into the tree
+		void remove(KeyType k); // delete first item with key equal to k
 
 		KeyType* maximum() const; // return the maximum item
 		KeyType* minimum()const ; // return the minimum item
@@ -61,9 +63,12 @@ class bst
 		vector<KeyType*> recPreOrder(Node<KeyType*> root, vector<KeyType*> s) const;
 		vector<KeyType*> recPostOrder(Node<KeyType*> root, vector<KeyType*> s) const;
 
-		Node<KeyType> root;
+		Node<KeyType> *root;
 
 		vector<KeyType*> s;
 };
 
 #include "bst.cpp"
+
+#endif
+
