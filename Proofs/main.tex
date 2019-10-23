@@ -1,0 +1,112 @@
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{array}
+\usepackage{listings}
+\usepackage{algpseudocode}
+
+\usepackage{tkz-graph}
+\usetikzlibrary{positioning}
+
+\title{CS 271 - Project 5}
+\author{Nicholas Reichert, Oscar Martinez}
+\date{October 23, 2019}
+
+\begin{document}
+
+\maketitle
+
+\section{}
+
+Prove a complete binary tree with height $h$ contains $2^{h+1} - 1$ total nodes.
+
+\begin{proof}
+We will prove this statement using induction.
+\bigskip
+
+\textbf{Inductive Hypothesis: } A complete binary tree with height $h$ contains $2^{h+1} - 1$ total nodes.
+
+\bigskip
+\textbf{Base Case: } The simplest binary tree would be the binary tree with no nodes.  However, that binary tree has no root, so its height is not defined. (The height of a tree is defined as the height of its root.)
+
+The next simplest binary tree would be the binary tree with just a root.  The tree would have height $0$, since the root has no children.
+\begin{equation}
+    2^{h+1} - 1 = 2^{0+1} - 1 = 2^1 - 1 = 2 - 1 = 1
+\end{equation}
+
+Our hypothesis for $h=0$ is correct, because in total, this tree has $1$ node.  
+
+\bigskip
+\textbf{Inductive Step: }
+
+Assume for the sake of induction that a complete binary tree with height $h$ contains $2^{h+1} - 1$ total nodes.
+
+Now, imagine a complete binary tree with height $h+1$.  It would have two children, each of which themselves are the roots of complete binary trees with height $h$.  They each have $2^{h+1} - 1$ total nodes.  The total number of nodes in this tree is
+\begin{align}
+    (2^{h+1} - 1) + (2^{h+1} - 1) + 1
+\end{align}
+because the number of nodes in this tree is the sum of the number of nodes in its children trees, plus one node for the root itself.  Simplifying, we get
+\begin{align}
+    (2^{h+1} - 1) + (2^{h+1} - 1) + 1 &= 2(2^{h+1}) - 1 \\
+    &= 2^{h+2} - 1 \\
+    &= 2^{(h+1)+1} - 1
+\end{align}
+
+A complete binary tree with height $h+1$ has $2^{(h+1)+1} - 1$ total nodes.  So by induction the hypothesis holds for all values of $h$.
+
+\end{proof}
+\setcounter{equation}{0}
+
+\section{}
+
+Prove a complete binary tree with $n$ nodes has $(n - 1)/2$ internal nodes.
+
+\begin{proof}
+We will prove this statement directly.
+\bigskip
+
+Suppose you have a complete binary tree with $n$ total nodes.  Every complete binary tree has a number of nodes of the form $2^{k}-1$, where $k$ is an integer (this follows from \#1 which was proved above).  For this binary tree, 
+\begin{align}
+    n &= 2^{k}-1 \\
+    n+1 &= 2^k \\
+    \log_{2}{(n+1)} &= k
+\end{align}
+
+We can add $1$ to $k$ to get the number of nodes in the next bigger complete binary tree.
+\begin{align}
+    2^{k+1} &= 2^{\log_{2}{(n+1)} + 1}-1 \\
+    &= 2(2^{\log_{2}{(n+1)}}) - 1 \\
+    &= 2(n+1) - 1
+\end{align}
+
+This bigger binary tree will have $2(n+1) - 1 = 2n + 1$ total nodes.
+
+This means that we added
+\begin{equation}
+    2n+1 - n = n+1
+\end{equation}
+
+$n+1$ nodes to the new tree as leaves.  So this bigger binary tree has $n+1$ leaves and $(2n+1) - (n+1) = n$ internal nodes.
+
+Let $a$ be the total number of nodes in this new tree.
+\begin{equation}
+    a = n+1 + n = 2n+1
+\end{equation}
+
+It has $n$ internal nodes.  Writing $n$ in terms of $a$, we get.
+\begin{align}
+    a &= 2n+1 \\
+    a-1 &= 2n \\
+    (a-1)/2 &= n
+\end{align}
+
+So a complete binary tree with $a$  nodes has $(a-1)/2$ internal nodes.
+
+\end{proof}
+\setcounter{equation}{0}
+
+
+\end{document}
