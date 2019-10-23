@@ -1,0 +1,10 @@
+
+.DS_Store
+*.swp
+
+*.o
+
+imdb
+test_bst
+test_dict
+
