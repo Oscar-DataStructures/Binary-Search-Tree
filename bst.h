@@ -20,7 +20,7 @@ class Node
 
 		KeyType key; //value held in node
 
-		Node* parent; //parent node
+		Node* parent = NULL; //parent node
 		Node* left = NULL; //left child
 		Node* right = NULL; //right child
 };
@@ -61,11 +61,15 @@ class bst
 		Node<KeyType*> recursiveInsert(Node<KeyType*> subtreeRoot, KeyType* k);
 		void recursiveRemove(Node<KeyType*> subtreeRoot, KeyType* k);
 
+		KeyType* helpMin(Node<KeyType>* subtreeRoot) const;
+		KeyType* helpMax(Node<KeyType>* subtreeRoot) const;
+		Node<KeyType>* helpGet(KeyType k) const;
+
 		vector<KeyType> recInOrder(Node<KeyType>* subtreeRoot, vector<KeyType>& s) const;
 		vector<KeyType> recPreOrder(Node<KeyType>* subtreeRoot, vector<KeyType>& s) const;
 		vector<KeyType> recPostOrder(Node<KeyType>* subtreeRoot, vector<KeyType>& s) const;
 
-		Node<KeyType> *root;
+		Node<KeyType>* root;
 };
 
 #include "bst.cpp"

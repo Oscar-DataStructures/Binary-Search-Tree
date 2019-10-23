@@ -15,7 +15,7 @@ Project 5
 
 using namespace std;
 
-
+//TODO: do KeyErrors
 //============================ New Node Function================================
 template <class KeyType>
 Node<KeyType>* newNode(KeyType key)
@@ -81,31 +81,40 @@ KeyType* bst<KeyType>::get(KeyType k) const
 // PreConditions: Root must exist
 // PostConditions:  Return first item that has key k
 {
-  Node<KeyType> *tmp = root;
-  while (tmp != NULL && tmp->key != k)
+	&(helpGet(k)->key);
+}
+
+
+// ================================= Get Method ================================
+template <class KeyType>
+Node<KeyType>* bst<KeyType>::helpGet(KeyType k) const
+// PreConditions:
+// PostConditions:
+{
+	Node<KeyType> *tmp = root;
+	while (tmp != NULL && tmp->key != k)
 	{
-    if (k < tmp->key)
+		if (k < tmp->key)
 		{
-      tmp = tmp->left;
+			tmp = tmp->left;
 		}
 
-    else
+		else
 		{
-      tmp = tmp->right;
+			tmp = tmp->right;
 		}
-  }
+	}
 
-  if (tmp == NULL)
+	if (tmp == NULL)
 	{
-    return NULL;
+		return NULL;
 	}
 
 	else
 	{
-    return &(tmp->key);
+		return tmp;
 	}
 }
-
 
 // ================================ Insert Method ==============================
 template <class KeyType>
@@ -129,36 +138,19 @@ void bst<KeyType>::insert(KeyType k)
     root = z;
 
 	else if (z->key < y->key)
+	{
     y->left = z;
+		z->parent = y;
+	}
 
 	else
+	{
     y->right = z;
+		z->parent = y;
+	}
   //recursiveInsert(this->root, k);
 }
 
-/*
-// =========================== Recursive Insert Method =========================
-template <class KeyType>
-Node<KeyType*> bst<KeyType>::recursiveInsert(Node<KeyType*> root, KeyType* k) //added parameter to allow recursion, we could also make new
-//private methods that do the recursion and just call them here
-// PreConditions:
-// PostConditions:  K is inserted into tree
-//this can be done easier with recursion(like the walks) or we can use Lall's iterative way
-
-{
-  Node<KeyType> *tmp = &root;
-  if (tmp == NULL)
-    tmp = newNode(k); //new node to be inserted, works with assignment operator if tree empty
-
-  if (k < tmp->key) //go down left side
-    tmp->left = recursiveInsert(tmp->left, k);
-
-  else if (k > root->key) //go down right side
-    tmp->right = recursiveInsert(tmp->right, k);
-
-  return tmp;
-}
-*/
 
 // ================================ Remove Method ==============================
 template <class KeyType>
@@ -179,20 +171,19 @@ void bst<KeyType>::recursiveRemove(Node<KeyType*> root, KeyType* k) //added para
 //can also be done recursively, Lalls way we will need transplant funct
 
 {
-  /*
-  tmp = &root; //this way we dont change the root pointer
-  if (tmp == NULL)
-    return; //ends the function since there is nothing to remove
 
-  if (k < tmp->key) //go down left side
-    tmp->left = recursiveRemove(tmp->left, k);
+  // tmp = &root; //this way we dont change the root pointer
+  // if (tmp == NULL)
+  //   return; //ends the function since there is nothing to remove
+	//
+  // if (k < tmp->key) //go down left side
+  //   tmp->left = recursiveRemove(tmp->left, k);
+	//
+  // else if (k > root->key) //go down right side
+  //   tmp->right = recursiveRemove(tmp->right, k);
+	//
+  // //last possibility is that the root itself is the one that needs to be removed
 
-  else if (k > root->key) //go down right side
-    tmp->right = recursiveRemove(tmp->right, k);
-
-  //last possibility is that the root itself is the one that needs to be removed
-
-  */
 }
 
 
@@ -222,7 +213,18 @@ KeyType* bst<KeyType>::maximum() const
 // PostConditions:  Return max item
 
 {
-  Node<KeyType>* tmp = root; //this way we dont change the root pointer
+	return helpMax(root);
+}
+
+
+// ============================== Max Helper Method ============================
+template <class KeyType>
+KeyType* bst<KeyType>::helpMax(Node<KeyType>* subtreeRoot) const
+// PreConditions: Root cannot be null
+// PostConditions:  Return min item
+
+{
+	Node<KeyType>* tmp = subtreeRoot; //this way we dont change the root pointer
   if (tmp != NULL)
     {
       while (tmp->right != NULL)
@@ -232,6 +234,7 @@ KeyType* bst<KeyType>::maximum() const
 
       return &(tmp->key);
     }
+
 }
 
 
@@ -242,7 +245,18 @@ KeyType* bst<KeyType>::minimum() const
 // PostConditions:  Return min item
 
 {
-	Node<KeyType>* tmp = root; //this way we dont change the root pointer
+	return helpMin(root);
+}
+
+
+// ============================== Min Helper Method ============================
+template <class KeyType>
+KeyType* bst<KeyType>::helpMin(Node<KeyType>* subtreeRoot) const
+// PreConditions: Root cannot be null
+// PostConditions:  Return min item
+
+{
+	Node<KeyType>* tmp = subtreeRoot; //this way we dont change the root pointer
   if (tmp != NULL)
     {
       while (tmp->left != NULL)
@@ -262,14 +276,14 @@ KeyType* bst<KeyType>::successor(const KeyType& k) const
 // PostConditions:  Return successor of k
 
 {
-  Node<KeyType>* tmp = root; //this way we dont change the root pointer
+  Node<KeyType>* tmp = helpGet(k); //this way we dont change the root pointer
   if (tmp != NULL)
   {
     Node<KeyType>* y;
     if (tmp->right != NULL)
     {
       tmp = tmp->right; //min of right subtree most immediate successor
-      return minimum();
+      return helpMin(tmp);
     }
 
     y = tmp->parent;
@@ -281,6 +295,8 @@ KeyType* bst<KeyType>::successor(const KeyType& k) const
 
     return &(y->key);
   }
+
+	return NULL;
 }
 
 
@@ -291,25 +307,26 @@ KeyType* bst<KeyType>::predecessor(const KeyType& k) const
 // PostConditions:  Return predecessor of k
 
 {
-  // Node<KeyType>* tmp = root; //this way we dont change the root pointer
-  // if (tmp != NULL)
-  // {
-  //   Node<KeyType*> y;
-  //   if (tmp->left != NULL)
-  //   {
-  //     tmp = tmp->left; //max of right subtree will be most immediate predecessor
-  //     return maximum();
-  //   }
-	//
-  //   y = tmp->left;
-  //   while (y != NULL && tmp->left == y)
-  //   {
-  //     tmp = y;
-  //     y = tmp->left; //revisit. Potential to lead off leaves
-  //   }
-	//
-  //   return y;
-  // }
+  Node<KeyType>* tmp = helpGet(k); //this way we dont change the root pointer
+  if (tmp != NULL)
+  {
+    Node<KeyType>* y;
+    if (tmp->left != NULL)
+    {
+      tmp = tmp->left; //max of right subtree will be most immediate predecessor
+      return helpMax(tmp);
+    }
+
+    y = tmp->parent;
+    while (y != NULL && tmp == y->left)
+    {
+
+      tmp = y;
+      y = tmp->parent;
+    }
+    return &(y->key);
+  }
+	return NULL;
 }
 
 

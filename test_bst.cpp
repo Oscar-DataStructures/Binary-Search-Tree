@@ -138,8 +138,11 @@ void test_successor()
 	a.insert(2);
 	a.insert(3);
 	a.insert(4);
+
+	assert(*(a.successor(1)) == 2);
 	assert(*(a.successor(2)) == 3);
 	assert(*(a.successor(3)) == 4);
+	assert((a.successor(4)) == NULL);
 
 }
 
@@ -152,8 +155,11 @@ void test_predecessor()
 	a.insert(2);
 	a.insert(3);
 	a.insert(4);
-	// assert(*(a.predecessor(2)) == 1);
-	// assert(*(a.predecessor(4)) == 3);
+
+	assert((a.predecessor(1)) == NULL);
+	assert(*(a.predecessor(2)) == 1);
+	assert(*(a.predecessor(3)) == 2);
+	assert(*(a.predecessor(4)) == 3);
 
 }
 
