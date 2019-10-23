@@ -14,10 +14,11 @@ Project 5
 // ======================= Test Default Constructor Method =====================
 void test_defaultConstructor()
 {
-	// bst<int> a;
-	// assert(a.empty() == 1);
-	//
-	// cout << a.inOrder() << endl;
+	bst<int> a;
+	assert(a.empty() == 1);
+
+	cout << a.inOrder() << endl;
+
 }
 
 
@@ -49,6 +50,7 @@ void test_empty()
 	// a.insert(1);
 	// a.insert(10);
 	// assert(a.empty() == 0);
+
 }
 
 
@@ -64,6 +66,7 @@ void test_get()
 	// a.insert(4);
 	//
 	// cout << a.get(2) << endl;
+
 }
 
 
@@ -80,6 +83,7 @@ void test_insert()
 	//
 	// assert(a.inOrder() == "1, 2, 3, 4");
 	// assert(a.empty() == 0);
+
 }
 
 
@@ -103,6 +107,7 @@ void test_remove()
 	// assert(a.empty() == 1);
 	// a.remove(1);
 	// cout << a.inOrder() << endl;
+
 }
 
 
@@ -115,12 +120,23 @@ void test_max()
 	// a.insert(3);
 	// a.insert(4);
 	// assert(a.maximum() == 4);
+	// a.remove(4);
+	// assert(a.maximum() == 3);
+
 }
 
 
 // ================================ Test Min Method ============================
 void test_min()
 {
+	// bst<int> a;
+	// a.insert(1);
+	// a.insert(2);
+	// a.insert(3);
+	// a.insert(4);
+	// assert(a.minimum() == 1);
+	// a.remove(1);
+	// assert(a.minimum() == 2);
 
 }
 
@@ -128,6 +144,13 @@ void test_min()
 // ============================= Test Successor Method =========================
 void test_successor()
 {
+	// bst<int> a;
+	// a.insert(1);
+	// a.insert(2);
+	// a.insert(3);
+	// a.insert(4);
+	// assert(a.successor(2) == 3);
+	// assert(a.successor(3) == 4);
 
 }
 
@@ -135,6 +158,13 @@ void test_successor()
 // ========================== Test Predecessor Method ==========================
 void test_predecessor()
 {
+	// bst<int> a;
+	// a.insert(1);
+	// a.insert(2);
+	// a.insert(3);
+	// a.insert(4);
+	// assert(a.predecessor(2) == 1);
+	// assert(a.predecessor(4) == 3);
 
 }
 
@@ -142,28 +172,69 @@ void test_predecessor()
 // =========================== Test Assignment Operator ========================
 void test_assignmentOP()
 {
+	// bst<int> a;
+	// bst<int>b;
+	//
+	// b = a;
+	// assert(a.empty() == 0);
+	// assert(b.empty() == 0);
 
+	// a.insert(1);
+	// a.insert(2);
+	// a.insert(3);
+	// a.insert(4);
+
+	// assert(a.empty() == 0);
+	// assert(a.inOrder() == "1, 2, 3, 4");
+
+	// b = a;
+	// assert(b.empty() == 0);
+	// assert(b.inOrder() == "1, 2, 3, 4");
 }
 
 
 // ============================ Test In Order Method ===========================
 void test_inOrder()
 {
+	// bst<int> a;
+	// cout << a.inOrder() << endl;
 
+	// a.insert(1);
+	// a.insert(2);
+	// a.insert(3);
+	// a.insert(4);
+
+	// cout << a.inOrder() << endl;
 }
 
 
 // ============================= Test Pre Order Method =========================
 void test_preOrder()
 {
+	// bst<int> a;
+	// cout << a.preOrder() << endl;
 
+	// a.insert(1);
+	// a.insert(2);
+	// a.insert(3);
+	// a.insert(4);
+
+	// cout << a.preOrder() << endl;
 }
 
 
 // ============================ Test Post Order Method =========================
 void test_postOrder()
 {
+	// bst<int> a;
+	// cout << a.postOrder() << endl;
 
+	// a.insert(1);
+	// a.insert(2);
+	// a.insert(3);
+	// a.insert(4);
+
+	// cout << a.postOrder() << endl;
 }
 
 
