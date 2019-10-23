@@ -8,6 +8,9 @@ Project 5
 #include <sstream>
 #include <string>
 #include <typeinfo>
+#include <iterator>
+#include <iostream>
+#include <algorithm>
 
 
 using namespace std;
@@ -15,15 +18,15 @@ using namespace std;
 
 //============================ New Node Function================================
 template <class KeyType>
-Node<KeyType>::Node(KeyType key)
+Node<KeyType>* newNode(KeyType key)
 //Preconditions:
 //Postcondition:
 
 {
-	//KeyType* node = new Node<KeyType>();		//dynamically allocate Node
-	this->key = key;
-	this->left = NULL;
-	this->right = NULL;    //New Node with no pointers to any values
+	Node<KeyType>* node = new Node<KeyType>();		//dynamically allocate Node
+	node->key = key;
+
+	return node;
 }
 
 
@@ -35,7 +38,6 @@ bst<KeyType>::bst()
 
 {
   this->root = NULL;
-
 
 }
 
@@ -53,12 +55,12 @@ bst<KeyType>::~bst()
 
 // =============================== Copy Constructor ============================
 template <class KeyType>
-bst<KeyType>::bst(const bst<KeyType>& tree)
+bst<KeyType>::bst(const bst<KeyType>* tree) //TODO: Come back to this
 // PreConditions:
 // PostConditions:
 
 {
-  //use preOrder walk to copy
+  deepCopy(tree);
 }
 
 
@@ -80,19 +82,28 @@ KeyType* bst<KeyType>::get(KeyType k) const
 // PostConditions:  Return first item that has key k
 {
   Node<KeyType> *tmp = root;
-  while (tmp != NULL && tmp->key != k) {
-    if (k < tmp->key) {
+  while (tmp != NULL && tmp->key != k)
+	{
+    if (k < tmp->key)
+		{
       tmp = tmp->left;
-    } else {
+		}
+
+    else
+		{
       tmp = tmp->right;
-    }
+		}
   }
 
-  if (tmp == NULL) {
+  if (tmp == NULL)
+	{
     return NULL;
-  } else {
+	}
+
+	else
+	{
     return &(tmp->key);
-  }
+	}
 }
 
 
@@ -102,29 +113,30 @@ void bst<KeyType>::insert(KeyType k)
 // PreConditions:
 // PostConditions:
 {
-  Node<KeyType> zInit(k);
-  Node<KeyType> *z = &zInit;
+  Node<KeyType> *z = newNode(k);
   Node<KeyType> *x = root;
   Node<KeyType> *y = NULL;
-  while (x != NULL) {
+  while (x != NULL)
+	{
     y = x;
-    if (z->key < x->key) {
+    if (z->key < x->key)
       x = x->left;
-    } else {
+    else
       x = x->right;
-    }
   }
-  if (y == NULL) { // If T is empty
+
+  if (y == NULL)
     root = z;
-  } else if (z->key < y->key) {
+
+	else if (z->key < y->key)
     y->left = z;
-  } else {
+
+	else
     y->right = z;
-  }
   //recursiveInsert(this->root, k);
 }
 
-
+/*
 // =========================== Recursive Insert Method =========================
 template <class KeyType>
 Node<KeyType*> bst<KeyType>::recursiveInsert(Node<KeyType*> root, KeyType* k) //added parameter to allow recursion, we could also make new
@@ -146,13 +158,13 @@ Node<KeyType*> bst<KeyType>::recursiveInsert(Node<KeyType*> root, KeyType* k) //
 
   return tmp;
 }
-
+*/
 
 // ================================ Remove Method ==============================
 template <class KeyType>
 void bst<KeyType>::remove(KeyType k) //added parameter to allow recursion, we could also make new
 // PreConditions:
-// PostConditions: 
+// PostConditions:
 {
   recursiveRemove(this->root, k);
 }
@@ -184,6 +196,25 @@ void bst<KeyType>::recursiveRemove(Node<KeyType*> root, KeyType* k) //added para
 }
 
 
+// ============================== Deep Copy Method ==============================
+template <class KeyType>
+bst<KeyType>& bst<KeyType>::deepCopy(Node<KeyType>* subtreeRoot)
+// PreConditions:
+// PostConditions:
+{
+	if(subtreeRoot != NULL) //works from the root so this is okay
+  {
+		Node<KeyType> *x = newNode(subtreeRoot->key);
+
+		this->insert(x->key);
+		deepCopy(subtreeRoot->left);
+		deepCopy(subtreeRoot->right);
+	}
+
+	return *this;
+}
+
+
 // ================================== Max Method ===============================
 template <class KeyType>
 KeyType* bst<KeyType>::maximum() const
@@ -191,8 +222,7 @@ KeyType* bst<KeyType>::maximum() const
 // PostConditions:  Return max item
 
 {
-  /*
-  tmp = &root; //this way we dont change the root pointer
+  Node<KeyType>* tmp = root; //this way we dont change the root pointer
   if (tmp != NULL)
     {
       while (tmp->right != NULL)
@@ -200,9 +230,8 @@ KeyType* bst<KeyType>::maximum() const
         tmp = tmp->right;
       }
 
-      return tmp;
+      return &(tmp->key);
     }
-    */
 }
 
 
@@ -213,8 +242,7 @@ KeyType* bst<KeyType>::minimum() const
 // PostConditions:  Return min item
 
 {
-  /*
-  tmp = &root; //this way we dont change the root pointer
+	Node<KeyType>* tmp = root; //this way we dont change the root pointer
   if (tmp != NULL)
     {
       while (tmp->left != NULL)
@@ -222,9 +250,8 @@ KeyType* bst<KeyType>::minimum() const
         tmp = tmp->left;
       }
 
-      return tmp;
+      return &(tmp->key);
     }
-    */
 }
 
 
@@ -235,11 +262,10 @@ KeyType* bst<KeyType>::successor(const KeyType& k) const
 // PostConditions:  Return successor of k
 
 {
-  /*
-  tmp = &root; //this way we dont change the root pointer
+  Node<KeyType>* tmp = root; //this way we dont change the root pointer
   if (tmp != NULL)
   {
-    Node<KeyType*> y;
+    Node<KeyType>* y;
     if (tmp->right != NULL)
     {
       tmp = tmp->right; //min of right subtree most immediate successor
@@ -253,9 +279,8 @@ KeyType* bst<KeyType>::successor(const KeyType& k) const
       y = tmp->parent;
     }
 
-    return y;
+    return &(y->key);
   }
-  */
 }
 
 
@@ -266,39 +291,37 @@ KeyType* bst<KeyType>::predecessor(const KeyType& k) const
 // PostConditions:  Return predecessor of k
 
 {
-  /*
-  tmp = &root; //this way we dont change the root pointer
-  if (tmp != NULL)
-  {
-    Node<KeyType*> y;
-    if (tmp->left != NULL)
-    {
-      tmp = tmp->left; //max of right subtree will be most immediate predecessor
-      return maximum();
-    }
-
-    y = tmp->left;
-    while (y != NULL && tmp->left == y)
-    {
-      tmp = y;
-      y = tmp->left; //revisit. Potential to lead off leaves
-    }
-
-    return y;
-  }
-  */
+  // Node<KeyType>* tmp = root; //this way we dont change the root pointer
+  // if (tmp != NULL)
+  // {
+  //   Node<KeyType*> y;
+  //   if (tmp->left != NULL)
+  //   {
+  //     tmp = tmp->left; //max of right subtree will be most immediate predecessor
+  //     return maximum();
+  //   }
+	//
+  //   y = tmp->left;
+  //   while (y != NULL && tmp->left == y)
+  //   {
+  //     tmp = y;
+  //     y = tmp->left; //revisit. Potential to lead off leaves
+  //   }
+	//
+  //   return y;
+  // }
 }
 
 
 // ============================= Assignment Operator ===========================
 template <class KeyType>
-bst<KeyType>& bst<KeyType>::operator=(const bst<KeyType>& tree)
+bst<KeyType>& bst<KeyType>::operator=(const bst<KeyType>* tree)
 // PreConditions:
 // PostConditions:  Make current tree equivalent to tree
 
 {
-	root = tree->root;
-
+	deepCopy(tree);
+	return this;
 }
 
 
@@ -309,23 +332,38 @@ string bst<KeyType>::inOrder() const
 // PostConditions:
 
 {
-	return (recInOrder(root, s));
+	vector<KeyType> s;
+	recInOrder(root, s);
+	ostringstream vts;
+
+	if (!s.empty())	// looked at https://www.geeksforgeeks.org/transform-vector-string/ to convert to string
+  {
+    // Convert all but the last element to avoid a trailing ","
+    copy(s.begin(), s.end()-1,
+        ostream_iterator<int>(vts, ", "));
+
+    // Now add the last element with no delimiter
+    vts << s.back();
+  }
+
+	return vts.str();
 }
 
 
 // =========================== InOrder Recursive Method ========================
 template <class KeyType>
-vector<KeyType*> bst<KeyType>::recInOrder(Node<KeyType*> root, vector<KeyType*> s) const
+vector<KeyType> bst<KeyType>::recInOrder(Node<KeyType>* subtreeRoot, vector<KeyType> &s) const
 // PreConditions:
 // PostConditions:
 
 {
-  if(&root != NULL) //works from the root so this is okay
+  if(subtreeRoot != NULL) //works from the root so this is okay
   {
-    recInOrder(root->left, s);
-    s.push_back(root->key);
-    recInOrder(root->right, s);
-  }
+    recInOrder(subtreeRoot->left, s);
+    s.push_back(subtreeRoot->key);
+    recInOrder(subtreeRoot->right, s);
+	}
+
 
 	return s;
 }
@@ -338,22 +376,36 @@ string bst<KeyType>::preOrder() const
 // PostConditions:
 
 {
-	return (recPreOrder(root, s));
+	vector<KeyType> s;
+	recPreOrder(root, s);
+	ostringstream vts;
+
+	if (!s.empty())	// looked at https://www.geeksforgeeks.org/transform-vector-string/ to convert to string
+  {
+    // Convert all but the last element to avoid a trailing ","
+    copy(s.begin(), s.end()-1,
+        ostream_iterator<int>(vts, ", "));
+
+    // Now add the last element with no delimiter
+    vts << s.back();
+  }
+
+	return vts.str();
 }
 
 
 // ========================== PreOrder Recursive Method ========================
 template <class KeyType>
-vector<KeyType*> bst<KeyType>::recPreOrder(Node<KeyType*> root, vector<KeyType*> s) const
+vector<KeyType> bst<KeyType>::recPreOrder(Node<KeyType>* subtreeRoot, vector<KeyType> &s) const
 // PreConditions:
 // PostConditions:
 
 {
-  if(&root != NULL) //works from the root so this is okay
+  if(subtreeRoot != NULL) //works from the root so this is okay
   {
-    s.push_back(&root->key);
-    recPreOrder(root->left);
-    recPreOrder(root->right);
+    s.push_back(subtreeRoot->key);
+    recPreOrder(subtreeRoot->left, s);
+    recPreOrder(subtreeRoot->right, s);
   }
 
 	return s;
@@ -367,22 +419,36 @@ string bst<KeyType>::postOrder() const
 // PostConditions:
 
 {
-	return recPostOrder(root, s);
+	vector<KeyType> s;
+	recPostOrder(root, s);
+	ostringstream vts;
+
+	if (!s.empty())	// looked at https://www.geeksforgeeks.org/transform-vector-string/ to convert to string
+  {
+    // Convert all but the last element to avoid a trailing ","
+    copy(s.begin(), s.end()-1,
+        ostream_iterator<int>(vts, ", "));
+
+    // Now add the last element with no delimiter
+    vts << s.back();
+  }
+
+	return vts.str();
 }
 
 
 // ======================== PostOrder Recursive Method =========================
 template <class KeyType>
-vector<KeyType*> bst<KeyType>::recPostOrder(Node<KeyType*> root, vector<KeyType*> s) const
+vector<KeyType> bst<KeyType>::recPostOrder(Node<KeyType>* subtreeRoot, vector<KeyType> &s) const
 // PreConditions:
 // PostConditions:
 
 {
-  if(&root != NULL) //works from the root so this is okay
+  if(subtreeRoot != NULL) //works from the root so this is okay
   {
-    recPostOrder(root->left);
-    recPostOrder(root->right);
-    s.push_back(&root->key);
+    recPostOrder(subtreeRoot->left, s);
+    recPostOrder(subtreeRoot->right, s);
+    s.push_back(subtreeRoot->key);
   }
 
 	return s;

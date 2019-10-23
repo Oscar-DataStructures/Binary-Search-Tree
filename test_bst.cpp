@@ -14,10 +14,10 @@ Project 5
 // ======================= Test Default Constructor Method =====================
 void test_defaultConstructor()
 {
-	//bst<int> a;
-	//assert(a.empty() == 1);
+	bst<int> a;
+	assert(a.empty() == 1);
 
-	// cout << a.inOrder() << endl;
+	cout << a.inOrder() << endl;
 
 }
 
@@ -25,18 +25,19 @@ void test_defaultConstructor()
 // ========================= Test Copy Constructor Method ======================
 void test_copyConstructor()
 {
-	// bst<int> a;
-	// bst<int>b(a);
-	// assert(b.empty() == 1);
-	//
-	// a.insert(1);
-	// a.insert(2);
-	// a.insert(3);
-	// a.insert(4);
-	// assert(a.inOrder() == "1, 2, 3, 4");
-	// bst<int>c(a);
-	// assert(c.empty() == 0);
-	// assert(c.inOrder() == "1, 2, 3, 4");
+	bst<int> a;
+	bst<int>b(a);
+	assert(a.empty() == 1);
+	assert(b.empty() == 1);
+
+	a.insert(1);
+	a.insert(2);
+	a.insert(3);
+	a.insert(4);
+	assert(a.inOrder() == "1, 2, 3, 4");
+	bst<int>c(a);
+	assert(c.empty() == 0);
+	assert(c.inOrder() == "1, 2, 3, 4");
 
 }
 
@@ -44,52 +45,33 @@ void test_copyConstructor()
 // ============================= Test Empty Method =============================
 void test_empty()
 {
-	// bst<int> a;
-	// assert(a.empty() == 1);
-	//
-	// a.insert(1);
-	// a.insert(10);
-	// assert(a.empty() == 0);
-
-}
-
-
-// ============================== Test Get Method ==============================
-void test_get()
-{
-	// bst<int> a;
-	// cout << a.get(1) << endl;
-	//
-	// a.insert(1);
-	// a.insert(2);
-	// a.insert(3);
-	// a.insert(4);
-	//
-	// cout << a.get(2) << endl;
-
-}
-
-
-// =============================== Test Insert Method ==========================
-void test_insert()
-{
 	bst<int> a;
 	assert(a.empty() == 1);
-	
-	cout << "init" << endl;
+
 	a.insert(1);
-	a.insert(5);
+	a.insert(10);
+	assert(a.empty() == 0);
+
+}
+
+
+// ============================== Test Get/Insert Method ==============================
+void test_get_insert()
+{
+	bst<int> a;
+
+	a.insert(2);
+	a.insert(1);
 	a.insert(3);
 	a.insert(4);
 
-	cout << "inserts completed" << endl;
+	assert(a.inOrder() == "1, 2, 3, 4");
 	assert(*(a.get(1)) == 1);
-	assert(*(a.get(4)) == 4);
-	assert(*(a.get(5)) == 5);
+	assert(*(a.get(2)) == 2);
 	assert(*(a.get(3)) == 3);
-	
-	// assert(a.inOrder() == "1, 3, 4, 5");
-	// assert(a.empty() == 0);
+	assert(*(a.get(4)) == 4);
+	assert(*(a.get(1)) != 3);
+	assert((a.get(10)) == NULL); //dont derefrence bc null
 
 }
 
@@ -121,14 +103,14 @@ void test_remove()
 // ================================ Test Max Method ============================
 void test_max()
 {
-	// bst<int> a;
-	// a.insert(1);
-	// a.insert(2);
-	// a.insert(3);
-	// a.insert(4);
-	// assert(a.maximum() == 4);
-	// a.remove(4);
-	// assert(a.maximum() == 3);
+	bst<int> a;
+	a.insert(1);
+	a.insert(2);
+	a.insert(3);
+	a.insert(4);
+	assert(*(a.maximum()) == 4);
+	//a.remove(4);
+	//assert(*(a.maximum()) == 3);
 
 }
 
@@ -136,14 +118,14 @@ void test_max()
 // ================================ Test Min Method ============================
 void test_min()
 {
-	// bst<int> a;
-	// a.insert(1);
-	// a.insert(2);
-	// a.insert(3);
-	// a.insert(4);
-	// assert(a.minimum() == 1);
+	bst<int> a;
+	a.insert(1);
+	a.insert(2);
+	a.insert(3);
+	a.insert(4);
+	assert(*(a.minimum()) == 1);
 	// a.remove(1);
-	// assert(a.minimum() == 2);
+	// assert(*(a.minimum()) == 2);
 
 }
 
@@ -151,13 +133,13 @@ void test_min()
 // ============================= Test Successor Method =========================
 void test_successor()
 {
-	// bst<int> a;
-	// a.insert(1);
-	// a.insert(2);
-	// a.insert(3);
-	// a.insert(4);
-	// assert(a.successor(2) == 3);
-	// assert(a.successor(3) == 4);
+	bst<int> a;
+	a.insert(1);
+	a.insert(2);
+	a.insert(3);
+	a.insert(4);
+	assert(*(a.successor(2)) == 3);
+	assert(*(a.successor(3)) == 4);
 
 }
 
@@ -165,13 +147,13 @@ void test_successor()
 // ========================== Test Predecessor Method ==========================
 void test_predecessor()
 {
-	// bst<int> a;
-	// a.insert(1);
-	// a.insert(2);
-	// a.insert(3);
-	// a.insert(4);
-	// assert(a.predecessor(2) == 1);
-	// assert(a.predecessor(4) == 3);
+	bst<int> a;
+	a.insert(1);
+	a.insert(2);
+	a.insert(3);
+	a.insert(4);
+	// assert(*(a.predecessor(2)) == 1);
+	// assert(*(a.predecessor(4)) == 3);
 
 }
 
@@ -179,69 +161,69 @@ void test_predecessor()
 // =========================== Test Assignment Operator ========================
 void test_assignmentOP()
 {
-	// bst<int> a;
-	// bst<int>b;
-	//
-	// b = a;
-	// assert(a.empty() == 0);
-	// assert(b.empty() == 0);
+	bst<int> a;
+	bst<int>b;
 
-	// a.insert(1);
-	// a.insert(2);
-	// a.insert(3);
-	// a.insert(4);
+	b = a;
+	assert(a.empty() == 1);
+	assert(b.empty() == 1);
 
-	// assert(a.empty() == 0);
-	// assert(a.inOrder() == "1, 2, 3, 4");
+	a.insert(1);
+	a.insert(2);
+	a.insert(3);
+	a.insert(4);
 
-	// b = a;
-	// assert(b.empty() == 0);
-	// assert(b.inOrder() == "1, 2, 3, 4");
+	assert(a.empty() == 0);
+	assert(a.inOrder() == "1, 2, 3, 4");
+
+	b = a;
+	assert(b.empty() == 0);
+	assert(b.inOrder() == "1, 2, 3, 4");
 }
 
 
 // ============================ Test In Order Method ===========================
 void test_inOrder()
 {
-	// bst<int> a;
-	// cout << a.inOrder() << endl;
+	bst<int> a;
 
-	// a.insert(1);
-	// a.insert(2);
-	// a.insert(3);
-	// a.insert(4);
+	a.insert(3);
+	a.insert(1);
+	a.insert(2);
+	a.insert(4);
+	a.insert(5);
 
-	// cout << a.inOrder() << endl;
+	assert(a.inOrder() == "1, 2, 3, 4, 5");
 }
 
 
 // ============================= Test Pre Order Method =========================
 void test_preOrder()
 {
-	// bst<int> a;
-	// cout << a.preOrder() << endl;
+	bst<int> a;
 
-	// a.insert(1);
-	// a.insert(2);
-	// a.insert(3);
-	// a.insert(4);
+	a.insert(3);
+	a.insert(1);
+	a.insert(2);
+	a.insert(4);
+	a.insert(5);
 
-	// cout << a.preOrder() << endl;
+	assert(a.preOrder() == "3, 1, 2, 4, 5");
 }
 
 
 // ============================ Test Post Order Method =========================
 void test_postOrder()
 {
-	// bst<int> a;
-	// cout << a.postOrder() << endl;
+	bst<int> a;
 
-	// a.insert(1);
-	// a.insert(2);
-	// a.insert(3);
-	// a.insert(4);
+	a.insert(3);
+	a.insert(1);
+	a.insert(2);
+	a.insert(4);
+	a.insert(5);
 
-	// cout << a.postOrder() << endl;
+	assert(a.postOrder() == "2, 1, 5, 4, 3");
 }
 
 
@@ -256,12 +238,10 @@ int main()
 	cout << "Copy Constructor Test		|Passed|" << endl;
 	test_empty();
 	cout << "Empty Test			|Passed|" << endl;
-	test_get();
+	test_get_insert();
 	cout << "Get Test			|Passed|" << endl;
-	test_insert();
-	cout << "Insert Test			|Passed|" << endl;
-	test_remove();
-	cout << "Remove Test			|Passed|" << endl;
+	// test_remove();
+	// cout << "Remove Test			|Passed|" << endl;
 	test_max();
 	cout << "Max Test			|Passed|" << endl;
 	test_min();
