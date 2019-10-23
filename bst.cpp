@@ -157,7 +157,8 @@ void bst<KeyType>::remove(KeyType k) //added parameter to allow recursion, we co
 // PreConditions:
 // PostConditions:
 {
-  recursiveRemove(root, k);
+  Node<KeyType>* newRoot = recursiveRemove(root, k);
+	root = newRoot;
 }
 
 
@@ -168,36 +169,40 @@ Node<KeyType>* bst<KeyType>::recursiveRemove(Node<KeyType>* subtreeRoot, KeyType
 // PostConditions:  Delete first item that has key k
 
 {
-	cout << "\nnewCall" << endl;
 	//cout << "enter recursiveRemove subtreeRoot=" << subtreeRoot << " subtreeRoot->parent=" << subtreeRoot->parent << " subtreeRoot->left=" << subtreeRoot->left << " subtreeRoot->right=" << subtreeRoot->right << " subtreeRoot->key=" << subtreeRoot->key << endl;
-  /*if (subtreeRoot == NULL)
+  if (subtreeRoot == NULL)
 	{
     return subtreeRoot; //ends the function since there is nothing to remove
 	}
 
   if (k < subtreeRoot->key)
 	{
-		cout << "k is less than root.key" << endl;
-    subtreeRoot->left = recursiveRemove(subtreeRoot->left, k);
+		Node<KeyType>* nodeToAttach = recursiveRemove(subtreeRoot->left, k);
+    subtreeRoot->left = nodeToAttach;
+		nodeToAttach->parent = subtreeRoot;
   }
 
 	else if (k > subtreeRoot->key)
 	{
-		cout << "k is greater than root.key" << endl;
-    subtreeRoot->right = recursiveRemove(subtreeRoot->right, k);
-	}*/
+		Node<KeyType>* nodeToAttach = recursiveRemove(subtreeRoot->right, k);
+		subtreeRoot->right = nodeToAttach;
+		nodeToAttach->parent = subtreeRoot;
+	}
 
-	if (k == subtreeRoot->key)
+	else if (k == subtreeRoot->key)
 	{
-
 		//this is if we delete the root and have to restructure the tree, 2 cases: root no child or root have child
 		// for the else portion I looked at https://www.geeksforgeeks.org/binary-search-tree-set-2-delete/ for refrence
-		if(subtreeRoot->left == NULL) //if no left child
+		if (subtreeRoot->left == NULL && subtreeRoot->right == NULL) //if root has no children
 		{
-			Node<KeyType>* tmp = subtreeRoot->right; //make the right child root // TODO This doesn't do anything
 			delete subtreeRoot;
-			cout << "right node of old root: " << &(tmp->key) << endl;
+			return NULL;
+		}
 
+		else if(subtreeRoot->left == NULL) //if no left child
+		{
+			Node<KeyType>* tmp = subtreeRoot->right; //make the right child root // TODO This doesn't do anything.  Actually it does
+			delete subtreeRoot;
 			return tmp;
 		}
 
@@ -206,16 +211,14 @@ Node<KeyType>* bst<KeyType>::recursiveRemove(Node<KeyType>* subtreeRoot, KeyType
 
 			Node<KeyType>* tmp = subtreeRoot->left; //make the left child root
 			delete subtreeRoot;
-			cout << "left node of old root: " << &(tmp->key) << endl;
 			return tmp;
 		}
 
-		Node<KeyType>* tmp = successorNode(tmp->key); // get the successor whose value will become new root
+		Node<KeyType>* tmp = successorNode(subtreeRoot->key); // get the successor whose value will become new root
 		subtreeRoot->key = tmp->key;
 		subtreeRoot->right = recursiveRemove(subtreeRoot->right, tmp->key);
 	}
 
-	cout << "Final subtree root: " << (subtreeRoot->key) << endl;
 	return subtreeRoot;
 }
 
@@ -349,6 +352,7 @@ Node<KeyType>* bst<KeyType>::successorNode(const KeyType& k) const
     return y;
   }
 
+	cout << "tmp is null" << endl;
 	return NULL;
 }
 

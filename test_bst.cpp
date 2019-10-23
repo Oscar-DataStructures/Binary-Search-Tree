@@ -106,25 +106,20 @@ void test_get_insert()
 void test_remove()
 {
 	bst<int> a;
-	a.insert(3);
 	a.insert(1);
-	a.insert(5);
-	assert(a.inOrder() == "1, 3, 5");
+	a.insert(2);
+	a.insert(3);
+	a.insert(4);
+	assert(a.inOrder() == "1, 2, 3, 4");
+	a.remove(1);
+	assert(a.inOrder() == "2, 3, 4");
+	a.remove(2);
+	assert(a.inOrder() == "3, 4");
 	a.remove(3);
-	cout << a.inOrder() << endl;
-	//assert(a.inOrder() == "2, 3, 4");
-	// a.remove(1);
-	// cout << a.inOrder() << endl;
-	// assert(a.inOrder() == "3, 4");
-	// a.remove(3);
-	// cout << a.inOrder() << endl;
-	// // assert(a.inOrder() == "4");
-	// a.remove(4);
-	// cout << a.inOrder() << endl;
-	// // assert(a.inOrder() == "");
-	// // assert(a.empty() == 1);
-	// a.remove(1);
-	// cout << a.inOrder() << endl;
+	assert(a.inOrder() == "4");
+	a.remove(4);
+	assert(a.inOrder() == "");
+
 
 }
 
@@ -138,8 +133,6 @@ void test_max()
 	a.insert(3);
 	a.insert(4);
 	assert(*(a.maximum()) == 4);
-	//a.remove(4);
-	//assert(*(a.maximum()) == 3);
 
 	bst<int> b;
 
@@ -167,8 +160,8 @@ void test_min()
 	a.insert(3);
 	a.insert(4);
 	assert(*(a.minimum()) == 1);
-	// a.remove(1);
-	// assert(*(a.minimum()) == 2);
+	a.remove(1);
+	assert(*(a.minimum()) == 2);
 
 	bst<int> b;
 
@@ -380,32 +373,32 @@ void test_postOrder()
 // =============================================================================
 int main()
 {
-	// test_defaultConstructor();
-	// cout << "Default Constructor Test	|Passed|" << endl;
-	// test_copyConstructor();
-	// cout << "Copy Constructor Test		|Passed|" << endl;
-	// test_empty();
-	// cout << "Empty Test			|Passed|" << endl;
-	// test_get_insert();
-	// cout << "Get Test			|Passed|" << endl;
+	test_defaultConstructor();
+	cout << "Default Constructor Test	|Passed|" << endl;
+	test_copyConstructor();
+	cout << "Copy Constructor Test		|Passed|" << endl;
+	test_empty();
+	cout << "Empty Test			|Passed|" << endl;
+	test_get_insert();
+	cout << "Get Test			|Passed|" << endl;
 	test_remove();
-	// cout << "Remove Test			|Passed|" << endl;
-	// test_max();
-	// cout << "Max Test			|Passed|" << endl;
-	// test_min();
-	// cout << "Min Test			|Passed|" << endl;
-	// test_successor();
-	// cout << "Successor Test			|Passed|" << endl;
-	// test_predecessor();
-	// cout << "Predecessor Test		|Passed|" << endl;
-	// test_assignmentOP();
-	// cout << "Assignment Test			|Passed|" << endl;
-	// test_inOrder();
-	// cout << "InOrder Test			|Passed|" << endl;
-	// test_preOrder();
-	// cout << "PreOrder Test			|Passed|" << endl;
-	// test_postOrder();
-	// cout << "PostOrder Test			|Passed|" << endl;
+	cout << "Remove Test			|Passed|" << endl;
+	test_max();
+	cout << "Max Test			|Passed|" << endl;
+	test_min();
+	cout << "Min Test			|Passed|" << endl;
+	test_successor();
+	cout << "Successor Test			|Passed|" << endl;
+	test_predecessor();
+	cout << "Predecessor Test		|Passed|" << endl;
+	test_assignmentOP();
+	cout << "Assignment Test			|Passed|" << endl;
+	test_inOrder();
+	cout << "InOrder Test			|Passed|" << endl;
+	test_preOrder();
+	cout << "PreOrder Test			|Passed|" << endl;
+	test_postOrder();
+	cout << "PostOrder Test			|Passed|" << endl;
 
 	return 0;
 }
