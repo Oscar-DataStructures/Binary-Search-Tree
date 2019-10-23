@@ -36,6 +36,8 @@ bst<KeyType>::bst()
 // PostConditions:
 
 {
+  this->root = NULL;
+
 
 }
 
@@ -65,11 +67,11 @@ bst<KeyType>::bst(const bst<KeyType>& tree)
 // ================================= Empty Method ==============================
 template <class KeyType>
 bool bst<KeyType>::empty() const
-// PreConditions: Tree must exist
+// PreConditions: None
 // PostConditions:  Return True if empty, False if not
 
 {
-  return (&root == NULL); //if root is null then the tree is empty
+  return (root == NULL); //if root is null then the tree is empty
 }
 
 
@@ -78,18 +80,14 @@ template <class KeyType>
 KeyType* bst<KeyType>::get(const KeyType& k) const
 // PreConditions: Tree must exist
 // PostConditions:  Return first item that has key k
-
 {
-  tmp = &root; //this way we dont change the root pointer
-  while (tmp != NULL || tmp->key != k)    //iterative solution allows us to search without having node parameter
-  {
-
-    if (tmp->key > k)
+  Node<KeyType> *tmp = &root;
+  while (tmp != NULL && tmp->key != k) {
+    if (k < tmp->key) {
       tmp = tmp->left;
-
-    else
+    } else {
       tmp = tmp->right;
-
+    }
   }
 
   return tmp;
@@ -101,9 +99,26 @@ template <class KeyType>
 void bst<KeyType>::insert(KeyType* k)
 // PreConditions:
 // PostConditions:
-
 {
-  recursiveInsert(this->root, k);
+  Node<KeyType> *z = newNode(k);
+  Node<KeyType> *x = &root;
+  Node<KeyType> *y = NULL;
+  while (x != NULL) {
+    y = x;
+    if (z->key < x->key) {
+      x = x->left;
+    } else {
+      x = x->right;
+    }
+  }
+  if (y == NULL) { // If T is empty
+    root = z;
+  } else if (z->key < y->key) {
+    y->left = z;
+  } else {
+    y->right = z;
+  }
+  //recursiveInsert(this->root, k);
 }
 
 
@@ -116,7 +131,7 @@ Node<KeyType*> bst<KeyType>::recursiveInsert(Node<KeyType*> root, KeyType* k) //
 //this can be done easier with recursion(like the walks) or we can use Lall's iterative way
 
 {
-  tmp = &root; //this way we dont change the root pointer
+  Node<KeyType> *tmp = &root;
   if (tmp == NULL)
     tmp = newNode(k); //new node to be inserted, works with assignment operator if tree empty
 
@@ -149,6 +164,7 @@ void bst<KeyType>::recursiveRemove(Node<KeyType*> root, KeyType* k) //added para
 //can also be done recursively, Lalls way we will need transplant funct
 
 {
+  /*
   tmp = &root; //this way we dont change the root pointer
   if (tmp == NULL)
     return; //ends the function since there is nothing to remove
@@ -161,6 +177,7 @@ void bst<KeyType>::recursiveRemove(Node<KeyType*> root, KeyType* k) //added para
 
   //last possibility is that the root itself is the one that needs to be removed
 
+  */
 }
 
 
@@ -171,6 +188,7 @@ KeyType* bst<KeyType>::maximum() const
 // PostConditions:  Return max item
 
 {
+  /*
   tmp = &root; //this way we dont change the root pointer
   if (tmp != NULL)
     {
@@ -181,6 +199,7 @@ KeyType* bst<KeyType>::maximum() const
 
       return tmp;
     }
+    */
 }
 
 
@@ -191,6 +210,7 @@ KeyType* bst<KeyType>::minimum() const
 // PostConditions:  Return min item
 
 {
+  /*
   tmp = &root; //this way we dont change the root pointer
   if (tmp != NULL)
     {
@@ -201,6 +221,7 @@ KeyType* bst<KeyType>::minimum() const
 
       return tmp;
     }
+    */
 }
 
 
@@ -211,6 +232,7 @@ KeyType* bst<KeyType>::successor(const KeyType& k) const
 // PostConditions:  Return successor of k
 
 {
+  /*
   tmp = &root; //this way we dont change the root pointer
   if (tmp != NULL)
   {
@@ -230,6 +252,7 @@ KeyType* bst<KeyType>::successor(const KeyType& k) const
 
     return y;
   }
+  */
 }
 
 
@@ -240,6 +263,7 @@ KeyType* bst<KeyType>::predecessor(const KeyType& k) const
 // PostConditions:  Return predecessor of k
 
 {
+  /*
   tmp = &root; //this way we dont change the root pointer
   if (tmp != NULL)
   {
@@ -259,6 +283,7 @@ KeyType* bst<KeyType>::predecessor(const KeyType& k) const
 
     return y;
   }
+  */
 }
 
 

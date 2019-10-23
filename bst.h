@@ -16,11 +16,11 @@ struct Node
 {
 	public:
 
-		KeyType* key; //value held in node
+		KeyType key; //value held in node
 
-		KeyType* parent; //parent node
-		KeyType* left; //left child
-		KeyType* right; //right child
+		Node* parent; //parent node
+		Node* left; //left child
+		Node* right; //right child
 
 		KeyType* newNode(KeyType* key); //have to add key type and key type
 		//add private root?
@@ -61,8 +61,8 @@ class bst
 		vector<KeyType*> recPreOrder(Node<KeyType*> root, vector<KeyType*> s) const;
 		vector<KeyType*> recPostOrder(Node<KeyType*> root, vector<KeyType*> s) const;
 
-		Node<KeyType*> root;
-		Node<KeyType*> tmp;
+		Node<KeyType> root;
+
 		vector<KeyType*> s;
 };
 
