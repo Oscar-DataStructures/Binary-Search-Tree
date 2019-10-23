@@ -36,16 +36,16 @@ class bst
 		bst(const bst<KeyType>& tree); //copy constructor
 		bool empty() const; // return true if empty; false o/w
 
-		KeyType *get(const KeyType& k) const; // return first item with key equal to k
+		KeyType* get(const KeyType& k) const; // return first item with key equal to k
 
 		void insert(KeyType* k); // insert k into the tree
 		void remove(const KeyType& k); // delete first item with key equal to k
 
-		KeyType *maximum() const; // return the maximum item
-		KeyType *minimum()const ; // return the minimum item
+		KeyType* maximum() const; // return the maximum item
+		KeyType* minimum()const ; // return the minimum item
 
-		KeyType *successor(const KeyType& k) const; // return the successor of k
-		KeyType *predecessor(const KeyType& k) const; // return the predecessor of k
+		KeyType* successor(const KeyType& k) const; // return the successor of k
+		KeyType* predecessor(const KeyType& k) const; // return the predecessor of k
 
 		bst<KeyType>& operator=(const bst<KeyType>& tree); // assignment operator
 
