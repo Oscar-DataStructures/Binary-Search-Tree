@@ -1,5 +1,5 @@
 /*
-Nicholas, Oscar
+Nicholas Reichert, Oscar Martinez
 CS 271
 Dr. Lall
 Project 5

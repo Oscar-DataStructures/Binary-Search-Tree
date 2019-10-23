@@ -1,5 +1,5 @@
 /*
-Nicholas, Oscar
+Nicholas Reichert, Oscar Martinez
 CS 271
 Dr. Lall
 Project 5
@@ -28,3 +28,4 @@ class Dictionary : public bst<KeyType>
 #include "dict.cpp"
 
 class KeyError{};
+

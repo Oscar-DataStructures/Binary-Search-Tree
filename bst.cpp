@@ -1,5 +1,5 @@
 /*
-Nicholas, Oscar
+Nicholas Reichert, Oscar Martinez
 CS 271
 Dr. Lall
 Project 5
@@ -97,7 +97,13 @@ KeyType* bst<KeyType>::get(const KeyType& k) const
 
 // ================================ Insert Method ==============================
 template <class KeyType>
-void bst<KeyType>::insert(Node* root, KeyType *k) //added parameter to allow recursion, we could also make new
+void bst<KeyType>::insert(KeyType *k)
+{
+  recursiveInsert(this->root, k);
+}
+
+template <class KeyType>
+void bst<KeyType>::recursiveInsert(Node* root, KeyType *k) //added parameter to allow recursion, we could also make new
 //private methods that do the recursion and just call them here
 // PreConditions:
 // PostConditions:  K is inserted into tree
@@ -109,10 +115,10 @@ void bst<KeyType>::insert(Node* root, KeyType *k) //added parameter to allow rec
     tmp = newNode(k); //new node to be inserted, works with assignment operator if tree empty
 
   if (k < tmp->key) //go down left side
-    tmp->left = insert(tmp->left, k);
+    tmp->left = recursiveInsert(tmp->left, k);
 
   else if (k > root->key) //go down right side
-    tmp->right = insert(tmp->right, k);
+    tmp->right = recursiveInsert(tmp->right, k);
 
     //actual insertion can be done with a return but this is void funct
 }
@@ -120,7 +126,13 @@ void bst<KeyType>::insert(Node* root, KeyType *k) //added parameter to allow rec
 
 // ================================ Remove Method ==============================
 template <class KeyType>
-void bst<KeyType>::remove(Node* root, const KeyType& k) //added parameter to allow recursion, we could also make new
+void bst<KeyType>::remove(const KeyType& k) //added parameter to allow recursion, we could also make new
+{
+  recursiveRemove(this->root, k);
+}
+
+template <class KeyType>
+void bst<KeyType>::recursiveRemove(Node* root, KeyType *k) //added parameter to allow recursion, we could also make new
 //private methods that do the recursion and just call them here
 // PreConditions:
 // PostConditions:  Delete first item that has key k
@@ -132,10 +144,10 @@ void bst<KeyType>::remove(Node* root, const KeyType& k) //added parameter to all
     return; //ends the function since there is nothing to remove
 
   if (k < tmp->key) //go down left side
-    tmp->left = remove(tmp->left, k);
+    tmp->left = recursiveRemove(tmp->left, k);
 
   else if (k > root->key) //go down right side
-    tmp->right = remove(tmp->right, k);
+    tmp->right = recursiveRemove(tmp->right, k);
 
   //last possibility is that the root itself is the one that needs to be removed
 

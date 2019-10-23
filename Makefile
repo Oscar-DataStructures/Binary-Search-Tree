@@ -1,4 +1,3 @@
-# Makefile for priorityQueue class
 
 CPPOPTIONS = -c -g -Wall -std=c++0x
 
@@ -30,3 +29,4 @@ tidy:
 
 clean scratch: tidy
 	rm -f *.o *.a all
+
