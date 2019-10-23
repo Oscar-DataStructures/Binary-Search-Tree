@@ -58,7 +58,17 @@ void test_remove()
 int main()
 {
 	test_defaultConstructor();
-	cout << "Default Constructor Test			|Passed|" << endl;
+	cout << "Default Constructor Test	|Passed|" << endl;
+	test_copyConstructor();
+	cout << "Copy Constructor Test		|Passed|" << endl;
+	test_empty();
+	cout << "Empty Test			|Passed|" << endl;
+	test_get();
+	cout << "Get Test			|Passed|" << endl;
+	test_insert();
+	cout << "Insert Test			|Passed|" << endl;
+	test_remove();
+	cout << "Remove Test			|Passed|" << endl;
 
 	return 0;
 }

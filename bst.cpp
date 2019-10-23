@@ -14,13 +14,14 @@ using namespace std;
 
 
 //============================ New Node Function================================
-Node* newNode(int value)
+template <class KeyType>
+KeyType* newNode(KeyType* key)
 //Preconditions:
 //Postcondition:
 
 {
-	Node* node = new Node();		//dynamically allocate Node
-	node->key = value;
+	KeyType* node = new Node<KeyType*>();		//dynamically allocate Node
+	node->key = key;
 	node->left = NULL;
 	node->right = NULL;    //New Node with no pointers to any values
 
@@ -35,7 +36,7 @@ bst<KeyType>::bst()
 // PostConditions:
 
 {
-  root = NULL;
+
 }
 
 
@@ -68,7 +69,7 @@ bool bst<KeyType>::empty() const
 // PostConditions:  Return True if empty, False if not
 
 {
-  return (root == NULL); //if root is null then the tree is empty
+  return (&root == NULL); //if root is null then the tree is empty
 }
 
 
@@ -79,7 +80,7 @@ KeyType* bst<KeyType>::get(const KeyType& k) const
 // PostConditions:  Return first item that has key k
 
 {
-  tmp = root; //this way we dont change the root pointer
+  tmp = &root; //this way we dont change the root pointer
   while (tmp != NULL || tmp->key != k)    //iterative solution allows us to search without having node parameter
   {
 
@@ -97,20 +98,25 @@ KeyType* bst<KeyType>::get(const KeyType& k) const
 
 // ================================ Insert Method ==============================
 template <class KeyType>
-void bst<KeyType>::insert(KeyType *k)
+void bst<KeyType>::insert(KeyType* k)
+// PreConditions:
+// PostConditions:
+
 {
   recursiveInsert(this->root, k);
 }
 
+
+// =========================== Recursive Insert Method =========================
 template <class KeyType>
-void bst<KeyType>::recursiveInsert(Node* root, KeyType *k) //added parameter to allow recursion, we could also make new
+Node<KeyType*> bst<KeyType>::recursiveInsert(Node<KeyType*> root, KeyType* k) //added parameter to allow recursion, we could also make new
 //private methods that do the recursion and just call them here
 // PreConditions:
 // PostConditions:  K is inserted into tree
 //this can be done easier with recursion(like the walks) or we can use Lall's iterative way
 
 {
-  tmp = root; //this way we dont change the root pointer
+  tmp = &root; //this way we dont change the root pointer
   if (tmp == NULL)
     tmp = newNode(k); //new node to be inserted, works with assignment operator if tree empty
 
@@ -120,26 +126,30 @@ void bst<KeyType>::recursiveInsert(Node* root, KeyType *k) //added parameter to 
   else if (k > root->key) //go down right side
     tmp->right = recursiveInsert(tmp->right, k);
 
-    //actual insertion can be done with a return but this is void funct
+  return tmp;
 }
 
 
 // ================================ Remove Method ==============================
 template <class KeyType>
 void bst<KeyType>::remove(const KeyType& k) //added parameter to allow recursion, we could also make new
+// PreConditions:
+// PostConditions: 
 {
   recursiveRemove(this->root, k);
 }
 
+
+// ============================= Remove Recursive Method =======================
 template <class KeyType>
-void bst<KeyType>::recursiveRemove(Node* root, KeyType *k) //added parameter to allow recursion, we could also make new
+void bst<KeyType>::recursiveRemove(Node<KeyType*> root, KeyType* k) //added parameter to allow recursion, we could also make new
 //private methods that do the recursion and just call them here
 // PreConditions:
 // PostConditions:  Delete first item that has key k
 //can also be done recursively, Lalls way we will need transplant funct
 
 {
-  tmp = root; //this way we dont change the root pointer
+  tmp = &root; //this way we dont change the root pointer
   if (tmp == NULL)
     return; //ends the function since there is nothing to remove
 
@@ -161,7 +171,7 @@ KeyType* bst<KeyType>::maximum() const
 // PostConditions:  Return max item
 
 {
-  tmp = root; //this way we dont change the root pointer
+  tmp = &root; //this way we dont change the root pointer
   if (tmp != NULL)
     {
       while (tmp->right != NULL)
@@ -181,7 +191,7 @@ KeyType* bst<KeyType>::minimum() const
 // PostConditions:  Return min item
 
 {
-  tmp = root; //this way we dont change the root pointer
+  tmp = &root; //this way we dont change the root pointer
   if (tmp != NULL)
     {
       while (tmp->left != NULL)
@@ -201,10 +211,10 @@ KeyType* bst<KeyType>::successor(const KeyType& k) const
 // PostConditions:  Return successor of k
 
 {
-  tmp = root; //this way we dont change the root pointer
+  tmp = &root; //this way we dont change the root pointer
   if (tmp != NULL)
   {
-    Node* y;
+    Node<KeyType*> y;
     if (tmp->right != NULL)
     {
       tmp = tmp->right; //min of right subtree most immediate successor
@@ -230,10 +240,10 @@ KeyType* bst<KeyType>::predecessor(const KeyType& k) const
 // PostConditions:  Return predecessor of k
 
 {
-  tmp = root; //this way we dont change the root pointer
+  tmp = &root; //this way we dont change the root pointer
   if (tmp != NULL)
   {
-    Node* y;
+    Node<KeyType*> y;
     if (tmp->left != NULL)
     {
       tmp = tmp->left; //max of right subtree will be most immediate predecessor
@@ -259,52 +269,93 @@ bst<KeyType>& bst<KeyType>::operator=(const bst<KeyType>& tree)
 // PostConditions:  Make current tree equivalent to tree
 
 {
+	root = tree->root;
 
 }
 
+
 // =============================== InOrder Method ==============================
 template <class KeyType>
-std::string bst<KeyType>::inOrder() const
+string bst<KeyType>::inOrder() const
 // PreConditions:
-// PostConditions:  r
+// PostConditions:
 
 {
-  if(root != NULL) //works from the root so this is okay
+	return (recInOrder(root, s));
+}
+
+
+// =========================== InOrder Recursive Method ========================
+template <class KeyType>
+vector<KeyType*> bst<KeyType>::recInOrder(Node<KeyType*> root, vector<KeyType*> s) const
+// PreConditions:
+// PostConditions:
+
+{
+  if(&root != NULL) //works from the root so this is okay
   {
-    inOrder(root->left);
-    cout << root->key << ", "; //convert to string to return, hold string in parameter?
-    inOrder(root->right);
+    recInOrder(root->left, s);
+    s.push_back(root->key);
+    recInOrder(root->right, s);
   }
+
+	return s;
 }
 
 
 // ============================== PreOrder Method ==============================
 template <class KeyType>
-std::string bst<KeyType>::preOrder() const
+string bst<KeyType>::preOrder() const
 // PreConditions:
 // PostConditions:
 
 {
-  if(root != NULL) //works from the root so this is okay
+	return (recPreOrder(root, s));
+}
+
+
+// ========================== PreOrder Recursive Method ========================
+template <class KeyType>
+vector<KeyType*> bst<KeyType>::recPreOrder(Node<KeyType*> root, vector<KeyType*> s) const
+// PreConditions:
+// PostConditions:
+
+{
+  if(&root != NULL) //works from the root so this is okay
   {
-    cout << root->key << ", "; //convert to string to return, hold string in parameter?
-    preOrder(root->left);
-    preOrder(root->right);
+    s.push_back(&root->key);
+    recPreOrder(root->left);
+    recPreOrder(root->right);
   }
+
+	return s;
 }
 
 
 // ============================= PostOrder Method ==============================
 template <class KeyType>
-std::string bst<KeyType>::postOrder() const
+string bst<KeyType>::postOrder() const
 // PreConditions:
 // PostConditions:
 
 {
-  if(root != NULL) //works from the root so this is okay
+	return recPostOrder(root, s);
+}
+
+
+// ======================== PostOrder Recursive Method =========================
+template <class KeyType>
+vector<KeyType*> bst<KeyType>::recPostOrder(Node<KeyType*> root, vector<KeyType*> s) const
+// PreConditions:
+// PostConditions:
+
+{
+  if(&root != NULL) //works from the root so this is okay
   {
-    postOrder(root->left);
-    postOrder(root->right);
-    cout << root->key << ", "; //convert to string to return, hold string in parameter?
+    recPostOrder(root->left);
+    recPostOrder(root->right);
+    s.push_back(&root->key);
   }
+
+	return s;
 }

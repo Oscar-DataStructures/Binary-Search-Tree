@@ -7,19 +7,22 @@ Project 5
 
 #include <iostream>
 #include <string>
+#include <vector>
 
+using namespace std;
 
+template <class KeyType>
 struct Node
 {
 	public:
 
-		int key; //value held in node
+		KeyType* key; //value held in node
 
-		Node* parent; //parent node
-		Node* left; //left child
-		Node* right; //right child
+		KeyType* parent; //parent node
+		KeyType* left; //left child
+		KeyType* right; //right child
 
-		Node* newNode(int key); //have to add key type and key type
+		KeyType* newNode(KeyType* key); //have to add key type and key type
 		//add private root?
 };
 
@@ -35,7 +38,7 @@ class bst
 
 		KeyType *get(const KeyType& k) const; // return first item with key equal to k
 
-		void insert(KeyType *k); // insert k into the tree
+		void insert(KeyType* k); // insert k into the tree
 		void remove(const KeyType& k); // delete first item with key equal to k
 
 		KeyType *maximum() const; // return the maximum item
@@ -51,11 +54,16 @@ class bst
 		std::string postOrder() const; // return string of items from a postorder traversal
 
 	private:
-		void recursiveInsert(Node* root, KeyType *k);
-		void recursiveRemove(Node* root, KeyType *k);
-		Node* root;
-		Node* tmp;
+		Node<KeyType*> recursiveInsert(Node<KeyType*> root, KeyType* k);
+		void recursiveRemove(Node<KeyType*> root, KeyType* k);
+
+		vector<KeyType*> recInOrder(Node<KeyType*> root, vector<KeyType*> s) const;
+		vector<KeyType*> recPreOrder(Node<KeyType*> root, vector<KeyType*> s) const;
+		vector<KeyType*> recPostOrder(Node<KeyType*> root, vector<KeyType*> s) const;
+
+		Node<KeyType*> root;
+		Node<KeyType*> tmp;
+		vector<KeyType*> s;
 };
 
 #include "bst.cpp"
-
