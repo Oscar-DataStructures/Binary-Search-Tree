@@ -157,53 +157,66 @@ void bst<KeyType>::remove(KeyType k) //added parameter to allow recursion, we co
 // PreConditions:
 // PostConditions:
 {
-  // recursiveRemove(subtreeRoot, k);
+  recursiveRemove(root, k);
 }
 
 
 // ============================= Remove Recursive Method =======================
 template <class KeyType>
-Node<KeyType>* bst<KeyType>::recursiveRemove(Node<KeyType>* root, KeyType* k) //added parameter to allow recursion, we could also make new
-//private methods that do the recursion and just call them here
+Node<KeyType>* bst<KeyType>::recursiveRemove(Node<KeyType>* subtreeRoot, KeyType k)
 // PreConditions:
 // PostConditions:  Delete first item that has key k
-//can also be done recursively, Lalls way we will need transplant funct
 
 {
+	cout << "\nnewCall" << endl;
+	//cout << "enter recursiveRemove subtreeRoot=" << subtreeRoot << " subtreeRoot->parent=" << subtreeRoot->parent << " subtreeRoot->left=" << subtreeRoot->left << " subtreeRoot->right=" << subtreeRoot->right << " subtreeRoot->key=" << subtreeRoot->key << endl;
+  /*if (subtreeRoot == NULL)
+	{
+    return subtreeRoot; //ends the function since there is nothing to remove
+	}
 
-  // Node<KeyType>* tmp = root; //this way we dont change the root pointer
-  // if (root == NULL)
-  //   return root; //ends the function since there is nothing to remove
-	//
-  // if (k < root->key) //go down left side
-  //   root->left = recursiveRemove(root->left, k);
-	//
-  // else if (k > root->key) //go down right side
-  //   root->right = recursiveRemove(root->right, k);
-	//
-	// 	else //this is if we delete the root and have to restructure the tree, 2 cases: root no child or root have child
-	// 	// for the else portion I looked at https://www.geeksforgeeks.org/binary-search-tree-set-2-delete/ for refrence
-	// 	{
-	// 		if(root->left == NULL) //if no left child
-	// 		{
-	// 			tmp = root->right; //make the right child root
-	// 			delete root;
-	// 			return tmp;
-	// 		}
-	//
-	// 		else if(root->right == NULL) //if no right child
-	// 		{
-	// 			tmp = root->left; //make the left child root
-	// 			delete root;
-	// 			return tmp;
-	// 		}
-	//
-	// 		tmp = successor(tmp->key); // get the successor whose value will become new root
-	// 		root->key = tmp->key;
-	// 		root->right = recursiveRemove(root->right, tmp->key);
-	// 	}
-	//
-	// 	return root;
+  if (k < subtreeRoot->key)
+	{
+		cout << "k is less than root.key" << endl;
+    subtreeRoot->left = recursiveRemove(subtreeRoot->left, k);
+  }
+
+	else if (k > subtreeRoot->key)
+	{
+		cout << "k is greater than root.key" << endl;
+    subtreeRoot->right = recursiveRemove(subtreeRoot->right, k);
+	}*/
+
+	if (k == subtreeRoot->key)
+	{
+
+		//this is if we delete the root and have to restructure the tree, 2 cases: root no child or root have child
+		// for the else portion I looked at https://www.geeksforgeeks.org/binary-search-tree-set-2-delete/ for refrence
+		if(subtreeRoot->left == NULL) //if no left child
+		{
+			Node<KeyType>* tmp = subtreeRoot->right; //make the right child root // TODO This doesn't do anything
+			delete subtreeRoot;
+			cout << "right node of old root: " << &(tmp->key) << endl;
+
+			return tmp;
+		}
+
+		else if(subtreeRoot->right == NULL) //if no right child
+		{
+
+			Node<KeyType>* tmp = subtreeRoot->left; //make the left child root
+			delete subtreeRoot;
+			cout << "left node of old root: " << &(tmp->key) << endl;
+			return tmp;
+		}
+
+		Node<KeyType>* tmp = successorNode(tmp->key); // get the successor whose value will become new root
+		subtreeRoot->key = tmp->key;
+		subtreeRoot->right = recursiveRemove(subtreeRoot->right, tmp->key);
+	}
+
+	cout << "Final subtree root: " << (subtreeRoot->key) << endl;
+	return subtreeRoot;
 }
 
 
@@ -265,13 +278,18 @@ KeyType* bst<KeyType>::minimum() const
 // PostConditions:  Return min item
 
 {
-	return helpMin(root);
+	Node<KeyType> *result = helpMin(root);
+	if (result != NULL) {
+		return &(result->key);
+	} else {
+		return NULL;
+	}
 }
 
 
 // ============================== Min Helper Method ============================
 template <class KeyType>
-KeyType* bst<KeyType>::helpMin(Node<KeyType>* subtreeRoot) const
+Node<KeyType>* bst<KeyType>::helpMin(Node<KeyType>* subtreeRoot) const
 // PreConditions: Root cannot be null
 // PostConditions:  Return min item
 
@@ -284,7 +302,7 @@ KeyType* bst<KeyType>::helpMin(Node<KeyType>* subtreeRoot) const
         tmp = tmp->left;
       }
 
-      return &(tmp->key);
+      return tmp;
     }
 }
 
@@ -292,6 +310,21 @@ KeyType* bst<KeyType>::helpMin(Node<KeyType>* subtreeRoot) const
 // ============================= Successor Method ==============================
 template <class KeyType>
 KeyType* bst<KeyType>::successor(const KeyType& k) const
+// PreConditions: Root cannot be null
+// PostConditions:  Return successor of k
+
+{
+  Node<KeyType> *result = successorNode(k);
+
+	if (result != NULL) {
+		return &(result->key);
+	} else {
+		return NULL;
+	}
+}
+
+template <class KeyType>
+Node<KeyType>* bst<KeyType>::successorNode(const KeyType& k) const
 // PreConditions: Root cannot be null
 // PostConditions:  Return successor of k
 
@@ -313,11 +346,13 @@ KeyType* bst<KeyType>::successor(const KeyType& k) const
       y = tmp->parent;
     }
 
-    return &(y->key);
+    return y;
   }
 
 	return NULL;
 }
+
+
 
 
 // ============================ Predecessor Method =============================
@@ -380,6 +415,7 @@ string bst<KeyType>::inOrder() const
         ostream_iterator<int>(vts, ", "));
 
     // Now add the last element with no delimiter
+
     vts << s.back();
   }
 

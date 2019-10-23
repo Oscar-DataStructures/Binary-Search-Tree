@@ -58,11 +58,13 @@ class bst
 		std::string postOrder() const; // return string of items from a postorder traversal
 
 	private:
-		Node<KeyType>* recursiveRemove(Node<KeyType>* root, KeyType* k);
+		Node<KeyType>* recursiveRemove(Node<KeyType>* root, KeyType k);
 
-		KeyType* helpMin(Node<KeyType>* subtreeRoot) const;
+		Node<KeyType>* helpMin(Node<KeyType>* subtreeRoot) const;
 		KeyType* helpMax(Node<KeyType>* subtreeRoot) const;
 		Node<KeyType>* helpGet(KeyType k) const;
+
+		Node<KeyType>* successorNode(const KeyType& k) const;
 
 		vector<KeyType> recInOrder(Node<KeyType>* subtreeRoot, vector<KeyType>& s) const;
 		vector<KeyType> recPreOrder(Node<KeyType>* subtreeRoot, vector<KeyType>& s) const;
