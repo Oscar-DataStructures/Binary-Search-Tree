@@ -12,10 +12,19 @@ Project 5
 #include <iostream>
 #include <algorithm>
 
-
 using namespace std;
 
-//TODO: do KeyErrors
+
+
+class KeyError: public exception
+{
+	virtual const char* what() const throw()
+	{
+		return "Error finding key";
+	}
+};
+
+
 //============================ New Node Function================================
 template <class KeyType>
 Node<KeyType>* newNode(KeyType key)
@@ -24,6 +33,9 @@ Node<KeyType>* newNode(KeyType key)
 
 {
 	Node<KeyType>* node = new Node<KeyType>();		//dynamically allocate Node
+	node->parent = NULL;
+	node->left = NULL;
+	node->right = NULL;
 	node->key = key;
 
 	return node;
@@ -47,20 +59,33 @@ template <class KeyType>
 bst<KeyType>::~bst()
 // PreConditions:
 // PostConditions:
-
 {
+	clearNodes();
+}
+template <class KeyType>
+void bst<KeyType>::clearNodes() {
   //use postOrder walk for deletion
+  if (root != NULL) {
+    vector< Node<KeyType>* > s;
+    recPostOrder(root, s);
+
+    for (int i=0; i<s.size(); i++) {
+      delete s[i];
+    }
+    this->root = NULL;
+  }
 }
 
 
 // =============================== Copy Constructor ============================
 template <class KeyType>
-bst<KeyType>::bst(const bst<KeyType>* tree) //TODO: Come back to this
+bst<KeyType>::bst(const bst<KeyType>& tree)
 // PreConditions:
 // PostConditions:
 
 {
-  deepCopy(tree);
+  this->root = NULL;
+  deepCopy(tree.root);
 }
 
 
@@ -81,7 +106,7 @@ KeyType* bst<KeyType>::get(KeyType k) const
 // PreConditions: Root must exist
 // PostConditions:  Return first item that has key k
 {
-	&(helpGet(k)->key);
+	return &(helpGet(k)->key);
 }
 
 
@@ -169,7 +194,6 @@ Node<KeyType>* bst<KeyType>::recursiveRemove(Node<KeyType>* subtreeRoot, KeyType
 // PostConditions:  Delete first item that has key k
 
 {
-	//cout << "enter recursiveRemove subtreeRoot=" << subtreeRoot << " subtreeRoot->parent=" << subtreeRoot->parent << " subtreeRoot->left=" << subtreeRoot->left << " subtreeRoot->right=" << subtreeRoot->right << " subtreeRoot->key=" << subtreeRoot->key << endl;
   if (subtreeRoot == NULL)
 	{
     return subtreeRoot; //ends the function since there is nothing to remove
@@ -201,7 +225,7 @@ Node<KeyType>* bst<KeyType>::recursiveRemove(Node<KeyType>* subtreeRoot, KeyType
 
 		else if(subtreeRoot->left == NULL) //if no left child
 		{
-			Node<KeyType>* tmp = subtreeRoot->right; //make the right child root // TODO This doesn't do anything.  Actually it does
+			Node<KeyType>* tmp = subtreeRoot->right; //make the right child root
 			delete subtreeRoot;
 			return tmp;
 		}
@@ -231,9 +255,8 @@ bst<KeyType>& bst<KeyType>::deepCopy(Node<KeyType>* subtreeRoot)
 {
 	if(subtreeRoot != NULL) //works from the root so this is okay
   {
-		Node<KeyType> *x = newNode(subtreeRoot->key);
-
-		this->insert(x->key);
+		// This does an pre-order walk through the tree, and inserts items in that order.
+		this->insert(subtreeRoot->key);
 		deepCopy(subtreeRoot->left);
 		deepCopy(subtreeRoot->right);
 	}
@@ -270,6 +293,7 @@ KeyType* bst<KeyType>::helpMax(Node<KeyType>* subtreeRoot) const
 
       return &(tmp->key);
     }
+  return NULL;
 
 }
 
@@ -307,6 +331,7 @@ Node<KeyType>* bst<KeyType>::helpMin(Node<KeyType>* subtreeRoot) const
 
       return tmp;
     }
+  return NULL;
 }
 
 
@@ -358,7 +383,6 @@ Node<KeyType>* bst<KeyType>::successorNode(const KeyType& k) const
     return y;
   }
 
-	cout << "tmp is null" << endl;
 	return NULL;
 }
 
@@ -397,13 +421,13 @@ KeyType* bst<KeyType>::predecessor(const KeyType& k) const
 
 // ============================= Assignment Operator ===========================
 template <class KeyType>
-bst<KeyType>& bst<KeyType>::operator=(const bst<KeyType>* tree)
+bst<KeyType>& bst<KeyType>::operator=(const bst<KeyType>& tree)
 // PreConditions:
 // PostConditions:  Make current tree equivalent to tree
-
 {
-	deepCopy(tree);
-	return this;
+	clearNodes();
+	deepCopy(tree.root);
+	return *this;
 }
 
 
@@ -502,18 +526,21 @@ string bst<KeyType>::postOrder() const
 // PostConditions:
 
 {
-	vector<KeyType> s;
+	vector< Node<KeyType>* > s;
 	recPostOrder(root, s);
 	ostringstream vts;
 
 	if (!s.empty())	// looked at https://www.geeksforgeeks.org/transform-vector-string/ to convert to string
   {
     // Convert all but the last element to avoid a trailing ","
-    copy(s.begin(), s.end()-1,
-        ostream_iterator<int>(vts, ", "));
+    //copy(s.begin(), s.end()-1,
+        //ostream_iterator<int>(vts, ", "));
+    for (int i=0; i<s.size()-1; i++) {
+	vts << (s[i])->key << ", ";
+    }
 
     // Now add the last element with no delimiter
-    vts << s.back();
+    vts << (s.back())->key;
   }
 
 	return vts.str();
@@ -522,7 +549,7 @@ string bst<KeyType>::postOrder() const
 
 // ======================== PostOrder Recursive Method =========================
 template <class KeyType>
-vector<KeyType> bst<KeyType>::recPostOrder(Node<KeyType>* subtreeRoot, vector<KeyType> &s) const
+vector< Node<KeyType>* > bst<KeyType>::recPostOrder(Node<KeyType>* subtreeRoot, vector< Node<KeyType>* > &s) const
 // PreConditions:
 // PostConditions:
 
@@ -531,7 +558,7 @@ vector<KeyType> bst<KeyType>::recPostOrder(Node<KeyType>* subtreeRoot, vector<Ke
   {
     recPostOrder(subtreeRoot->left, s);
     recPostOrder(subtreeRoot->right, s);
-    s.push_back(subtreeRoot->key);
+    s.push_back(subtreeRoot);
   }
 
 	return s;

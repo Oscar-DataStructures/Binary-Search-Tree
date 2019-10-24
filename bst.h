@@ -20,9 +20,9 @@ class Node
 
 		KeyType key; //value held in node
 
-		Node* parent = NULL; //parent node
-		Node* left = NULL; //left child
-		Node* right = NULL; //right child
+		Node<KeyType>* parent; //parent node
+		Node<KeyType>* left; //left child
+		Node<KeyType>* right; //right child
 };
 
 template <class KeyType>
@@ -36,7 +36,7 @@ class bst
 	public:
 		bst(); //constructor
 		~bst(); //deconstructor
-		bst(const bst<KeyType>* tree); //copy constructor
+		bst(const bst<KeyType>& tree); //copy constructor
 		bool empty() const; // return true if empty; false o/w
 
 		KeyType* get(KeyType k) const; // return first item with key equal to k
@@ -51,13 +51,14 @@ class bst
 		KeyType* successor(const KeyType& k) const; // return the successor of k
 		KeyType* predecessor(const KeyType& k) const; // return the predecessor of k
 
-		bst<KeyType>& operator=(const bst<KeyType>* tree); // assignment operator
+		bst<KeyType>& operator=(const bst<KeyType>& tree); // assignment operator
 
 		std::string inOrder() const; // return string of items from an inorder traversal
 		std::string preOrder() const; // return string of items from a preorder traversal
 		std::string postOrder() const; // return string of items from a postorder traversal
 
 	private:
+		void clearNodes();
 		Node<KeyType>* recursiveRemove(Node<KeyType>* root, KeyType k);
 
 		Node<KeyType>* helpMin(Node<KeyType>* subtreeRoot) const;
@@ -68,7 +69,7 @@ class bst
 
 		vector<KeyType> recInOrder(Node<KeyType>* subtreeRoot, vector<KeyType>& s) const;
 		vector<KeyType> recPreOrder(Node<KeyType>* subtreeRoot, vector<KeyType>& s) const;
-		vector<KeyType> recPostOrder(Node<KeyType>* subtreeRoot, vector<KeyType>& s) const;
+		vector< Node<KeyType>* > recPostOrder(Node<KeyType>* subtreeRoot, vector< Node<KeyType>* > &s) const;
 
 		Node<KeyType>* root;
 };

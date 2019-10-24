@@ -16,9 +16,6 @@ void test_defaultConstructor()
 {
 	bst<int> a;
 	assert(a.empty() == 1);
-
-	cout << a.inOrder() << endl;
-
 }
 
 
@@ -26,18 +23,28 @@ void test_defaultConstructor()
 void test_copyConstructor()
 {
 	bst<int> a;
-	bst<int>b(a);
+	bst<int> b(a);
 	assert(a.empty() == 1);
 	assert(b.empty() == 1);
 
 	a.insert(1);
-	a.insert(2);
-	a.insert(3);
-	a.insert(4);
-	assert(a.inOrder() == "1, 2, 3, 4");
-	bst<int>c(a);
+	a.insert(5);
+	a.insert(10);
+	a.insert(15);
+	assert(a.inOrder() == "1, 5, 10, 15");
+
+	bst<int> c(a);
 	assert(c.empty() == 0);
-	assert(c.inOrder() == "1, 2, 3, 4");
+	assert(c.inOrder() == "1, 5, 10, 15");
+
+	// Now, if we modify each of them, it will not affect the other.
+	a.insert(4);
+	assert(a.inOrder() == "1, 4, 5, 10, 15");
+	assert(c.inOrder() == "1, 5, 10, 15");
+
+	c.insert(7);
+	assert(a.inOrder() == "1, 4, 5, 10, 15");
+	assert(c.inOrder() == "1, 5, 7, 10, 15");
 
 }
 
