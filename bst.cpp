@@ -319,13 +319,19 @@ KeyType* bst<KeyType>::successor(const KeyType& k) const
 {
   Node<KeyType> *result = successorNode(k);
 
-	if (result != NULL) {
+	if (result != NULL)
+	{
 		return &(result->key);
-	} else {
+	}
+	
+	else
+	{
 		return NULL;
 	}
 }
 
+
+// =========================== SuccessorNode Method ============================
 template <class KeyType>
 Node<KeyType>* bst<KeyType>::successorNode(const KeyType& k) const
 // PreConditions: Root cannot be null
