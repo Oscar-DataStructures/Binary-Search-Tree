@@ -6,14 +6,34 @@ Project 5
 */
 using namespace std;
 
-#include <map>
 #include <string>
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include "dict.h"
 
-map<string, string> loadDataFile() {
-  map<string, string> movieData;
+struct KVPair {
+	string key;
+	string value;
+};
+ostream& operator<<(ostream& os, const KVPair& dt) {
+	return os << dt.key;
+}
+bool operator< (const KVPair &kv1, const KVPair &kv2) {
+	return kv1.key < kv2.key;
+}
+bool operator> (const KVPair &kv1, const KVPair &kv2) {
+	return kv1.key > kv2.key;
+}
+bool operator!= (const KVPair &kv1, const KVPair &kv2) {
+	return kv1.key != kv2.key;
+}
+bool operator== (const KVPair &kv1, const KVPair &kv2) {
+	return kv1.key == kv2.key;
+}
+
+Dictionary<KVPair> loadDataFile() {
+  Dictionary<KVPair> movieData;
 
   ifstream movieFile;
   movieFile.open("data.tsv");
@@ -35,7 +55,16 @@ map<string, string> loadDataFile() {
       getline(ss, junk, '\t');
       getline(ss, movieGenres, '\t');
 
-      movieData[movieTitle] = movieGenres;
+      KVPair moviePair;
+      moviePair.key = movieTitle;
+      moviePair.value = movieGenres;
+      try {
+        movieData.insert(moviePair);
+      } catch (KeyError e) {
+        // If a KeyError has occurred, the data is already in the Dictionary.
+        // We won't do anything here.
+        // The first occurence of a key that is added will always prevail.
+      }
     }
 
     movieFile.close();
@@ -47,22 +76,30 @@ map<string, string> loadDataFile() {
   return movieData;
 }
 
-void findGenre(map<string, string> movieData, string searchTerm) {
-  if (movieData.count(searchTerm) > 0) {
-    string genre = movieData[searchTerm];
+void findGenre(Dictionary<KVPair> movieData, string searchTerm) {
+  try {
+    KVPair testPair;
+    testPair.key = searchTerm;
+    KVPair *foundPair = movieData.get(testPair);
+    string genre = foundPair->value;
     cout << "Genres: " << genre << endl << endl;
-  } else {
+  } catch (KeyError e) {
     cout << "Title not found." << endl << endl;
   }
 }
 
 int main() {
-  map<string, string> movieData = loadDataFile();
+  Dictionary<KVPair> movieData = loadDataFile();
   while (true) {
+    cout << "L1" << endl;
     string searchName;
+    cout << "L2" << endl;
     cout << "Enter a movie/show title to search for: ";
+    cout << "L3" << endl;
     getline(cin, searchName, '\n');
+    cout << "L4" << endl;
     findGenre(movieData, searchName);
+    cout << "L5" << endl;
   }
   
   return 0;
