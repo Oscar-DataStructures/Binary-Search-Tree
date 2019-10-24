@@ -78,7 +78,7 @@ void test_get_insert()
 	assert(*(a.get(3)) == 3);
 	assert(*(a.get(4)) == 4);
 	assert(*(a.get(1)) != 3);
-	assert((a.get(10)) == NULL); //dont derefrence bc null
+	//a.get(10)); //uncomment to see KeyError
 
 	bst<int> b;
 
@@ -104,7 +104,7 @@ void test_get_insert()
 	assert(*(b.get(14)) == 14);
 
 	assert(*(b.get(3)) != 4);
-	assert((b.get(1)) == NULL); //dont derefrence bc null
+	// (b.get(1)); //uncomment to see KeyError
 
 }
 
@@ -127,7 +127,7 @@ void test_remove()
 	a.remove(4);
 	assert(a.inOrder() == "");
 
-
+	// a.remove(1);	//uncomment to see KeyError
 }
 
 
@@ -198,7 +198,7 @@ void test_successor()
 	assert(*(a.successor(1)) == 2);
 	assert(*(a.successor(2)) == 3);
 	assert(*(a.successor(3)) == 4);
-	assert((a.successor(4)) == NULL);
+	//a.successor(4); //uncomment to see KeyError
 
 	bst<int> b;
 
@@ -221,7 +221,7 @@ void test_successor()
 	assert(*(b.successor(12)) == 13);
 	assert(*(b.successor(13)) == 14);
 
-	assert((b.successor(14)) == NULL);
+	//b.successor(14); //uncomment to see KeyError
 }
 
 
@@ -234,7 +234,7 @@ void test_predecessor()
 	a.insert(3);
 	a.insert(4);
 
-	assert((a.predecessor(1)) == NULL);
+	//a.predecessor(1); //uncomment to see KeyError
 	assert(*(a.predecessor(2)) == 1);
 	assert(*(a.predecessor(3)) == 2);
 	assert(*(a.predecessor(4)) == 3);
@@ -260,7 +260,7 @@ void test_predecessor()
 	assert(*(b.predecessor(13)) == 12);
 	assert(*(b.predecessor(14)) == 13);
 
-	assert((b.predecessor(3)) == NULL);
+	//b.predecessor(3); //uncomment to see KeyError
 }
 
 

@@ -6,6 +6,7 @@ Project 5
 */
 
 #ifndef _bst_h
+#define _bst_h
 
 #include <iostream>
 #include <string>
