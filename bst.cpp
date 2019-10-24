@@ -16,7 +16,7 @@ using namespace std;
 
 
 
-class KeyError: public exception
+class KeyError
 {
 	virtual const char* what() const throw()
 	{
@@ -28,15 +28,14 @@ class KeyError: public exception
 //============================ New Node Function================================
 template <class KeyType>
 Node<KeyType>* newNode(KeyType key)
-//Preconditions:
-//Postcondition:
-
+//Preconditions: 	N/A
+//Postcondition:	Returns a dynamically allocated keytype Node pointer that updates its key value to be the one in the parameter
 {
 	Node<KeyType>* node = new Node<KeyType>();		//dynamically allocate Node
 	node->parent = NULL;
 	node->left = NULL;
 	node->right = NULL;
-	node->key = key;
+	node->key = key;															//Sets the node key to the key parameter
 
 	return node;
 }
@@ -45,44 +44,52 @@ Node<KeyType>* newNode(KeyType key)
 // ================================= Constructor ===============================
 template <class KeyType>
 bst<KeyType>::bst()
-// PreConditions:
-// PostConditions:
-
+// PreConditions:		N/A
+// PostConditions:	Sets the private member root to NULL
 {
   this->root = NULL;
-
 }
 
 
 // ================================ DeConstructor ==============================
 template <class KeyType>
 bst<KeyType>::~bst()
-// PreConditions:
-// PostConditions:
+// PreConditions:		A bst must exist for this to be called one
+// PostConditions:	Calls clearNodes which deletes bst
 {
 	clearNodes();
 }
-template <class KeyType>
-void bst<KeyType>::clearNodes() {
-  //use postOrder walk for deletion
-  if (root != NULL) {
-    vector< Node<KeyType>* > s;
-    recPostOrder(root, s);
 
-    for (int i=0; i<s.size(); i++) {
+
+// ================================= Clear Nodes ===============================
+template <class KeyType>
+void bst<KeyType>::clearNodes()
+// PreConditions:		A bst must exist for this to be called one
+// PostConditions:	Deallocates memory and destroys existing bst
+{
+
+  if (root != NULL)
+	{
+    vector< Node<KeyType>* > s;
+    recPostOrder(root, s);						//used to traverse tree and delete nodes
+
+    for (int i=0; i<s.size(); i++)
+		{
       delete s[i];
     }
-    this->root = NULL;
+
+    this->root = NULL;								//exist condition after the tree has been deleted
   }
+
+	delete root;												//deletes and free the space of the root
 }
 
 
 // =============================== Copy Constructor ============================
 template <class KeyType>
 bst<KeyType>::bst(const bst<KeyType>& tree)
-// PreConditions:
-// PostConditions:
-
+// PreConditions:		Can only be used for construction
+// PostConditions:	Current tree will be a copy of tree
 {
   this->root = NULL;
   deepCopy(tree.root);
@@ -92,9 +99,8 @@ bst<KeyType>::bst(const bst<KeyType>& tree)
 // ================================= Empty Method ==============================
 template <class KeyType>
 bool bst<KeyType>::empty() const
-// PreConditions: None
+// PreConditions: 	Must be called on a bst
 // PostConditions:  Return True if empty, False if not
-
 {
   return (root == NULL); //if root is null then the tree is empty
 }
@@ -103,49 +109,45 @@ bool bst<KeyType>::empty() const
 // ================================= Get Method ================================
 template <class KeyType>
 KeyType* bst<KeyType>::get(KeyType k) const
-// PreConditions: Root must exist
-// PostConditions:  Return first item that has key k
+// PreConditions: 	Tree must exist and not be empty
+// PostConditions:  Return first item in bst that has key k
 {
+	if (this->helpGet(k) == NULL)
+		throw KeyError();
+
 	return &(helpGet(k)->key);
 }
 
 
-// ================================= Get Method ================================
+// ============================== Help Get Method ==============================
 template <class KeyType>
 Node<KeyType>* bst<KeyType>::helpGet(KeyType k) const
-// PreConditions:
-// PostConditions:
+// PreConditions:		Tree must exist and not be empty
+// PostConditions:	Returns the node that has the value k
 {
 	Node<KeyType> *tmp = root;
 	while (tmp != NULL && tmp->key != k)
 	{
 		if (k < tmp->key)
-		{
-			tmp = tmp->left;
-		}
+			tmp = tmp->left;					//Left tree traversal
 
 		else
-		{
-			tmp = tmp->right;
-		}
+			tmp = tmp->right;					//Right tree traversal
 	}
 
-	if (tmp == NULL)
-	{
+	if (tmp == NULL)							//Empty Tree
 		return NULL;
-	}
 
 	else
-	{
 		return tmp;
-	}
 }
+
 
 // ================================ Insert Method ==============================
 template <class KeyType>
 void bst<KeyType>::insert(KeyType k)
-// PreConditions:
-// PostConditions:
+// PreConditions:		N/A
+// PostConditions:	Inserts a node containing k into the bst while maintaining the bst property
 {
   Node<KeyType> *z = newNode(k);
   Node<KeyType> *x = root;
@@ -154,12 +156,12 @@ void bst<KeyType>::insert(KeyType k)
 	{
     y = x;
     if (z->key < x->key)
-      x = x->left;
+      x = x->left;							//Left tree traversal
     else
-      x = x->right;
+      x = x->right;             //Right tree traversal
   }
 
-  if (y == NULL)
+  if (y == NULL)								//If no nodes are in tree
     root = z;
 
 	else if (z->key < y->key)
@@ -178,62 +180,62 @@ void bst<KeyType>::insert(KeyType k)
 
 // ================================ Remove Method ==============================
 template <class KeyType>
-void bst<KeyType>::remove(KeyType k) //added parameter to allow recursion, we could also make new
-// PreConditions:
-// PostConditions:
+void bst<KeyType>::remove(KeyType k)
+// PreConditions:		Tree cannot be empty and key must be in bst
+// PostConditions:	Node with value k will be removed and tree restructured
 {
   Node<KeyType>* newRoot = recursiveRemove(root, k);
-	root = newRoot;
+	root = newRoot;							//restructures root
 }
 
 
 // ============================= Remove Recursive Method =======================
 template <class KeyType>
 Node<KeyType>* bst<KeyType>::recursiveRemove(Node<KeyType>* subtreeRoot, KeyType k)
-// PreConditions:
-// PostConditions:  Delete first item that has key k
-
+// PreConditions:		Tree cannot be empty and key must be in bst
+// PostConditions:  Return new keytype node pointer subtree with node with value k removed
 {
+	if (this->helpGet(k) == NULL)
+		throw KeyError();
+
   if (subtreeRoot == NULL)
 	{
-    return subtreeRoot; //ends the function since there is nothing to remove
+    return subtreeRoot; 							//ends the function since there is nothing to remove
 	}
 
-  if (k < subtreeRoot->key)
+  if (k < subtreeRoot->key)						//Left tree traversal
 	{
 		Node<KeyType>* nodeToAttach = recursiveRemove(subtreeRoot->left, k);
     subtreeRoot->left = nodeToAttach;
 		nodeToAttach->parent = subtreeRoot;
   }
 
-	else if (k > subtreeRoot->key)
+	else if (k > subtreeRoot->key)			//Right tree traversal
 	{
 		Node<KeyType>* nodeToAttach = recursiveRemove(subtreeRoot->right, k);
 		subtreeRoot->right = nodeToAttach;
 		nodeToAttach->parent = subtreeRoot;
 	}
 
-	else if (k == subtreeRoot->key)
+	else if (k == subtreeRoot->key)		// for the else portion I looked at https://www.geeksforgeeks.org/binary-search-tree-set-2-delete/ for refrence
 	{
-		//this is if we delete the root and have to restructure the tree, 2 cases: root no child or root have child
-		// for the else portion I looked at https://www.geeksforgeeks.org/binary-search-tree-set-2-delete/ for refrence
 		if (subtreeRoot->left == NULL && subtreeRoot->right == NULL) //if root has no children
 		{
 			delete subtreeRoot;
 			return NULL;
 		}
 
-		else if(subtreeRoot->left == NULL) //if no left child
+		else if(subtreeRoot->left == NULL) 								//if no left child
 		{
-			Node<KeyType>* tmp = subtreeRoot->right; //make the right child root
+			Node<KeyType>* tmp = subtreeRoot->right; 				//make the right child root
 			delete subtreeRoot;
 			return tmp;
 		}
 
-		else if(subtreeRoot->right == NULL) //if no right child
+		else if(subtreeRoot->right == NULL) 							//if no right child
 		{
 
-			Node<KeyType>* tmp = subtreeRoot->left; //make the left child root
+			Node<KeyType>* tmp = subtreeRoot->left; 				//make the left child root
 			delete subtreeRoot;
 			return tmp;
 		}
@@ -247,13 +249,13 @@ Node<KeyType>* bst<KeyType>::recursiveRemove(Node<KeyType>* subtreeRoot, KeyType
 }
 
 
-// ============================== Deep Copy Method ==============================
+// ============================= Deep Copy Method ==============================
 template <class KeyType>
 bst<KeyType>& bst<KeyType>::deepCopy(Node<KeyType>* subtreeRoot)
-// PreConditions:
-// PostConditions:
+// PreConditions:		N/A
+// PostConditions:	Returns a pointer to current bst that is a copy of subtreeRoot
 {
-	if(subtreeRoot != NULL) //works from the root so this is okay
+	if(subtreeRoot != NULL)
   {
 		// This does an pre-order walk through the tree, and inserts items in that order.
 		this->insert(subtreeRoot->key);
@@ -268,9 +270,8 @@ bst<KeyType>& bst<KeyType>::deepCopy(Node<KeyType>* subtreeRoot)
 // ================================== Max Method ===============================
 template <class KeyType>
 KeyType* bst<KeyType>::maximum() const
-// PreConditions: Root cannot be null
+// PreConditions: 	Root cannot be null
 // PostConditions:  Return max item
-
 {
 	return helpMax(root);
 }
@@ -279,58 +280,56 @@ KeyType* bst<KeyType>::maximum() const
 // ============================== Max Helper Method ============================
 template <class KeyType>
 KeyType* bst<KeyType>::helpMax(Node<KeyType>* subtreeRoot) const
-// PreConditions: Root cannot be null
+// PreConditions: 	Root cannot be null
 // PostConditions:  Return min item
-
 {
 	Node<KeyType>* tmp = subtreeRoot; //this way we dont change the root pointer
   if (tmp != NULL)
     {
-      while (tmp->right != NULL)
+      while (tmp->right != NULL)		//Right tree traversal
       {
         tmp = tmp->right;
       }
 
       return &(tmp->key);
     }
-  return NULL;
 
+  return NULL;
 }
 
 
 // ================================= Min Method ================================
 template <class KeyType>
 KeyType* bst<KeyType>::minimum() const
-// PreConditions: Root cannot be null
+// PreConditions: 	Root cannot be null
 // PostConditions:  Return min item
-
 {
 	Node<KeyType> *result = helpMin(root);
-	if (result != NULL) {
+	if (result != NULL)
 		return &(result->key);
-	} else {
+
+	else
 		return NULL;
-	}
 }
 
 
 // ============================== Min Helper Method ============================
 template <class KeyType>
 Node<KeyType>* bst<KeyType>::helpMin(Node<KeyType>* subtreeRoot) const
-// PreConditions: Root cannot be null
+// PreConditions: 	Root cannot be null
 // PostConditions:  Return min item
-
 {
 	Node<KeyType>* tmp = subtreeRoot; //this way we dont change the root pointer
   if (tmp != NULL)
     {
-      while (tmp->left != NULL)
+      while (tmp->left != NULL)			//Left tree traversal
       {
         tmp = tmp->left;
       }
 
       return tmp;
     }
+
   return NULL;
 }
 
@@ -338,9 +337,8 @@ Node<KeyType>* bst<KeyType>::helpMin(Node<KeyType>* subtreeRoot) const
 // ============================= Successor Method ==============================
 template <class KeyType>
 KeyType* bst<KeyType>::successor(const KeyType& k) const
-// PreConditions: Root cannot be null
+// PreConditions: 	Root cannot be null
 // PostConditions:  Return successor of k
-
 {
   Node<KeyType> *result = successorNode(k);
 
@@ -348,7 +346,7 @@ KeyType* bst<KeyType>::successor(const KeyType& k) const
 	{
 		return &(result->key);
 	}
-	
+
 	else
 	{
 		return NULL;
@@ -359,22 +357,24 @@ KeyType* bst<KeyType>::successor(const KeyType& k) const
 // =========================== SuccessorNode Method ============================
 template <class KeyType>
 Node<KeyType>* bst<KeyType>::successorNode(const KeyType& k) const
-// PreConditions: Root cannot be null
+// PreConditions: 	Root cannot be null
 // PostConditions:  Return successor of k
-
 {
-  Node<KeyType>* tmp = helpGet(k); //this way we dont change the root pointer
+	if (this->helpGet(k) == NULL)
+		throw KeyError();
+
+  Node<KeyType>* tmp = helpGet(k); 				//this way we dont change the root pointer
   if (tmp != NULL)
   {
     Node<KeyType>* y;
     if (tmp->right != NULL)
     {
-      tmp = tmp->right; //min of right subtree most immediate successor
+      tmp = tmp->right; 									//min of right subtree most immediate successor
       return helpMin(tmp);
     }
 
     y = tmp->parent;
-    while (y != NULL && tmp == y->right)
+    while (y != NULL && tmp == y->right)	//traverse until we either hit head or tmp is no longer a right child of y
     {
       tmp = y;
       y = tmp->parent;
@@ -387,27 +387,27 @@ Node<KeyType>* bst<KeyType>::successorNode(const KeyType& k) const
 }
 
 
-
-
 // ============================ Predecessor Method =============================
 template <class KeyType>
 KeyType* bst<KeyType>::predecessor(const KeyType& k) const
-// PreConditions: Root cannot be null
+// PreConditions: 	Root cannot be null
 // PostConditions:  Return predecessor of k
-
 {
-  Node<KeyType>* tmp = helpGet(k); //this way we dont change the root pointer
+	if (this->helpGet(k) == NULL)
+		throw KeyError();
+
+  Node<KeyType>* tmp = helpGet(k);		 //this way we dont change the root pointer
   if (tmp != NULL)
   {
     Node<KeyType>* y;
     if (tmp->left != NULL)
     {
-      tmp = tmp->left; //max of right subtree will be most immediate predecessor
+      tmp = tmp->left; 									//max of right subtree will be most immediate predecessor
       return helpMax(tmp);
     }
 
     y = tmp->parent;
-    while (y != NULL && tmp == y->left)
+    while (y != NULL && tmp == y->left) //traverse until we either hit head or tmp is no longer a left child of y
     {
 
       tmp = y;
@@ -422,11 +422,12 @@ KeyType* bst<KeyType>::predecessor(const KeyType& k) const
 // ============================= Assignment Operator ===========================
 template <class KeyType>
 bst<KeyType>& bst<KeyType>::operator=(const bst<KeyType>& tree)
-// PreConditions:
+// PreConditions:		N/A
 // PostConditions:  Make current tree equivalent to tree
 {
-	clearNodes();
+	clearNodes();					//first we delete the current tree
 	deepCopy(tree.root);
+
 	return *this;
 }
 
@@ -434,9 +435,8 @@ bst<KeyType>& bst<KeyType>::operator=(const bst<KeyType>& tree)
 // =============================== InOrder Method ==============================
 template <class KeyType>
 string bst<KeyType>::inOrder() const
-// PreConditions:
-// PostConditions:
-
+// PreConditions:		bst must exist
+// PostConditions:	Return a string representation of the inOrder walk of the bst
 {
 	vector<KeyType> s;
 	recInOrder(root, s);
@@ -448,8 +448,6 @@ string bst<KeyType>::inOrder() const
     copy(s.begin(), s.end()-1,
         ostream_iterator<int>(vts, ", "));
 
-    // Now add the last element with no delimiter
-
     vts << s.back();
   }
 
@@ -460,9 +458,8 @@ string bst<KeyType>::inOrder() const
 // =========================== InOrder Recursive Method ========================
 template <class KeyType>
 vector<KeyType> bst<KeyType>::recInOrder(Node<KeyType>* subtreeRoot, vector<KeyType> &s) const
-// PreConditions:
-// PostConditions:
-
+// PreConditions:		bst must exist
+// PostConditions:	Return a vector representation of the inOrder walk of the bst
 {
   if(subtreeRoot != NULL) //works from the root so this is okay
   {
@@ -479,9 +476,8 @@ vector<KeyType> bst<KeyType>::recInOrder(Node<KeyType>* subtreeRoot, vector<KeyT
 // ============================== PreOrder Method ==============================
 template <class KeyType>
 string bst<KeyType>::preOrder() const
-// PreConditions:
-// PostConditions:
-
+// PreConditions:		bst must exist
+// PostConditions:	Return a string representation of the preOrder walk of the bst
 {
 	vector<KeyType> s;
 	recPreOrder(root, s);
@@ -493,7 +489,6 @@ string bst<KeyType>::preOrder() const
     copy(s.begin(), s.end()-1,
         ostream_iterator<int>(vts, ", "));
 
-    // Now add the last element with no delimiter
     vts << s.back();
   }
 
@@ -504,8 +499,8 @@ string bst<KeyType>::preOrder() const
 // ========================== PreOrder Recursive Method ========================
 template <class KeyType>
 vector<KeyType> bst<KeyType>::recPreOrder(Node<KeyType>* subtreeRoot, vector<KeyType> &s) const
-// PreConditions:
-// PostConditions:
+// PreConditions:		bst must exist
+// PostConditions:	Return a vector representation of the preOrder walk of the bst
 
 {
   if(subtreeRoot != NULL) //works from the root so this is okay
@@ -522,21 +517,18 @@ vector<KeyType> bst<KeyType>::recPreOrder(Node<KeyType>* subtreeRoot, vector<Key
 // ============================= PostOrder Method ==============================
 template <class KeyType>
 string bst<KeyType>::postOrder() const
-// PreConditions:
-// PostConditions:
-
+// PreConditions:		bst must exist
+// PostConditions:	Return a string representation of the postOrder walk of the bst
 {
 	vector< Node<KeyType>* > s;
 	recPostOrder(root, s);
 	ostringstream vts;
 
-	if (!s.empty())	// looked at https://www.geeksforgeeks.org/transform-vector-string/ to convert to string
+	if (!s.empty())
   {
-    // Convert all but the last element to avoid a trailing ","
-    //copy(s.begin(), s.end()-1,
-        //ostream_iterator<int>(vts, ", "));
-    for (int i=0; i<s.size()-1; i++) {
-	vts << (s[i])->key << ", ";
+    for (int i=0; i<s.size()-1; i++)		//changed implementation so we could use it to destruct
+		{
+			vts << (s[i])->key << ", ";
     }
 
     // Now add the last element with no delimiter
@@ -550,9 +542,8 @@ string bst<KeyType>::postOrder() const
 // ======================== PostOrder Recursive Method =========================
 template <class KeyType>
 vector< Node<KeyType>* > bst<KeyType>::recPostOrder(Node<KeyType>* subtreeRoot, vector< Node<KeyType>* > &s) const
-// PreConditions:
-// PostConditions:
-
+// PreConditions:		bst must exist
+// PostConditions:	Return a vector representation of the postOrder walk of the bst
 {
   if(subtreeRoot != NULL) //works from the root so this is okay
   {
