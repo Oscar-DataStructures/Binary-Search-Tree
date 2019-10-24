@@ -19,6 +19,7 @@ class Dictionary : public bst<KeyType>
     Dictionary(); //constructor
     Dictionary(const Dictionary<KeyType>& dict); //copy constructor
 
+
     bool empty() const; // return true if empty; false o/w
 
     KeyType *get(const KeyType& k) const; // return first item with key equal to k
@@ -30,4 +31,3 @@ class Dictionary : public bst<KeyType>
 #include "dict.cpp"
 
 #endif
-

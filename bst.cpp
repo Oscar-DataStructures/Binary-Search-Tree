@@ -112,6 +112,8 @@ KeyType* bst<KeyType>::get(KeyType k) const
 // PreConditions: 	Tree must exist and not be empty
 // PostConditions:  Return first item in bst that has key k
 {
+	// cout << "Value: " << helpGet(k) << endl;
+	// cout << "Pointer: " << this->helpGet(k) << endl;
 	if (this->helpGet(k) == NULL)
 		throw KeyError();
 

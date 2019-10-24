@@ -10,29 +10,37 @@ Project 5
 #include <cassert>
 #include "dict.h"
 
-struct KVPair {
+struct KVPair
+{
 	string key;
 	string value;
 };
-ostream& operator<<(ostream& os, const KVPair& dt) {
-	return os << dt.key;
-}
-bool operator< (const KVPair &kv1, const KVPair &kv2) {
-	return kv1.key < kv2.key;
-}
-bool operator> (const KVPair &kv1, const KVPair &kv2) {
-	return kv1.key > kv2.key;
-}
-bool operator!= (const KVPair &kv1, const KVPair &kv2) {
-	return kv1.key != kv2.key;
-}
-bool operator== (const KVPair &kv1, const KVPair &kv2) {
-	return kv1.key == kv2.key;
-}
 
+// ============================= Operator Overloading ==========================
+ostream& operator<<(ostream& os, const KVPair& dt)
+	{
+		return os << dt.key;
+	}
 
+bool operator< (const KVPair &kv1, const KVPair &kv2)
+	{
+		return kv1.key < kv2.key;
+	}
 
+bool operator> (const KVPair &kv1, const KVPair &kv2)
+	{
+		return kv1.key > kv2.key;
+	}
 
+bool operator!= (const KVPair &kv1, const KVPair &kv2)
+	{
+		return kv1.key != kv2.key;
+	}
+
+bool operator== (const KVPair &kv1, const KVPair &kv2)
+	{
+		return kv1.key == kv2.key;
+	}
 
 // ======================= Test Default Constructor Method =====================
 void test_defaultConstructor()
@@ -102,7 +110,7 @@ void test_empty()
 	assert(dictA.empty() == 0);
 }
 
-// =============================== Test Insert and Get Methods ==========================
+// ========================= Test Insert and Get Methods =======================
 void test_insert_and_get()
 {
 	Dictionary<KVPair> dictA;

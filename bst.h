@@ -58,7 +58,7 @@ class bst
 		std::string preOrder() const; // return string of items from a preorder traversal
 		std::string postOrder() const; // return string of items from a postorder traversal
 
-	private:
+	protected:
 		void clearNodes();
 		Node<KeyType>* recursiveRemove(Node<KeyType>* root, KeyType k);
 
